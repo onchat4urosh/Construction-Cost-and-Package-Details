@@ -30,7 +30,7 @@
   --maxw:       1180px;
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
 html,body{margin:0;padding:0}
 body{
   background:var(--ink);
@@ -90,8 +90,8 @@ button{font-family:inherit}
 
 /* ============================= NAV ============================= */
 .nav{
-  position:sticky;top:0;z-index:50;
-  background:rgba(11,20,31,.88);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:90;
+  background-color:var(--ink);
   border-bottom:1px solid var(--line-soft);
 }
 .nav-inner{width:min(var(--maxw),92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px}
@@ -110,14 +110,17 @@ button{font-family:inherit}
 .burger{display:none;background:none;border:1px solid var(--line);width:40px;height:40px;border-radius:3px;color:var(--text);cursor:pointer}
 @media (max-width:900px){
   .nav-links{
-    position:fixed;top:68px;left:0;right:0;bottom:0;background:var(--ink);
-    flex-direction:column;padding:28px 6vw;gap:0;
-    transform:translateX(100%);transition:transform .28s ease;z-index:49;
+    position:fixed;inset:0;width:100vw;height:100dvh;
+    background-color:var(--ink);opacity:1;
+    flex-direction:column;padding:88px 6vw 28px;gap:0;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    transform:translateX(100%);transition:transform .28s ease;z-index:80;
   }
   .nav-links.open{transform:translateX(0)}
   .nav-links a{padding:16px 0;border-bottom:1px solid var(--line-soft);font-size:17px}
   .nav-call{display:none}
   .burger{display:block}
+  body.menu-open{overflow:hidden}
 }
 
 /* ============================= HERO ============================= */
@@ -145,7 +148,40 @@ button{font-family:inherit}
 .dim-item .dv{font-family:'Space Grotesk';font-size:clamp(19px,2.6vw,27px);font-weight:600;margin-top:6px;color:var(--text)}
 .dim-item .dv.amber{color:var(--amber)}
 
-/* ============================= PACKAGE / TIER CARDS ============================= */
+/* ============================= HOW IT WORKS ============================= */
+.how-track{
+  display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;position:relative;padding-bottom:2px;
+}
+.how-track::-webkit-scrollbar{display:none}
+.how-card{
+  flex:0 0 auto;width:min(78vw,272px);scroll-snap-align:start;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:5px;padding:26px 22px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s ease, transform .5s ease, border-color .25s ease, background .25s ease;
+}
+.how-track.in-view .how-card{opacity:1;transform:translateY(0)}
+.how-track.in-view .how-card:nth-child(1){transition-delay:0s}
+.how-track.in-view .how-card:nth-child(2){transition-delay:.08s}
+.how-track.in-view .how-card:nth-child(3){transition-delay:.16s}
+.how-track.in-view .how-card:nth-child(4){transition-delay:.24s}
+.how-track.in-view .how-card:nth-child(5){transition-delay:.32s}
+.how-card.active{border-color:var(--amber);background:linear-gradient(180deg, rgba(226,161,60,.08), transparent 45%), var(--ink-2)}
+.how-num{font-family:'JetBrains Mono';font-size:11.5px;letter-spacing:.05em;color:var(--amber);margin-bottom:16px}
+.how-card h4{font-size:17px;margin-bottom:8px}
+.how-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.55}
+
+.how-rail{display:flex;justify-content:space-between;align-items:center;position:relative;margin-top:26px;padding:0 2px}
+.how-rail-line{position:absolute;left:17px;right:17px;top:50%;height:1px;background:var(--line);z-index:0}
+.how-tick{
+  position:relative;z-index:1;width:32px;height:32px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--ink);color:var(--muted-2);
+  font-family:'JetBrains Mono';font-size:11px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+}
+.how-tick:hover{transform:scale(1.06)}
+.how-tick.active{border-color:var(--amber);background:var(--amber);color:#20140a}
+
 .tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media (max-width:900px){.tiers-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}}
 .tier{
@@ -170,46 +206,152 @@ button{font-family:inherit}
 .tier ul{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:10px}
 .tier li{font-size:13.5px;color:var(--text);padding-left:16px;position:relative}
 .tier li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:1.5px;background:var(--blue)}
-.tier-foot-note{font-size:11px;color:var(--muted-2);margin-top:44px;max-width:720px;line-height:1.6}
+.tier-foot-note{font-size:11px;color:var(--muted-2);margin-top:20px;max-width:720px;line-height:1.6}
+
+/* ---- combined package + spec slider ---- */
+.tier-slider-wrap{margin:6px 0 26px}
+.tier-slider-labels{display:flex;justify-content:space-between;margin-bottom:22px}
+.tier-slider-labels button{
+  background:none;border:none;color:var(--muted-2);font-family:'Space Grotesk',sans-serif;
+  font-size:15px;cursor:pointer;padding:4px 2px;font-weight:500;transition:color .15s;
+}
+.tier-slider-labels button.active{color:var(--amber);font-weight:700}
+.tier-slider-track{position:relative;height:26px;padding:0 13px}
+.tier-ticks{position:absolute;left:13px;right:13px;top:11px;display:flex;justify-content:space-between;pointer-events:none;z-index:1}
+.tier-ticks span{width:7px;height:7px;background:var(--blue-deep);border-radius:1px;display:block}
+#tierRange{
+  -webkit-appearance:none;appearance:none;position:absolute;left:0;top:8px;width:100%;
+  height:3px;border-radius:2px;background:var(--line);z-index:2;cursor:pointer;
+}
+#tierRange::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--amber);
+  border:3px solid var(--ink);box-shadow:0 0 0 4px rgba(226,161,60,.22);cursor:pointer;margin-top:-1px;
+}
+#tierRange::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--amber);border:3px solid var(--ink);box-shadow:0 0 0 4px rgba(226,161,60,.22);cursor:pointer}
+#tierRange::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+
+.tier-banner{
+  background:linear-gradient(90deg, rgba(226,161,60,.14), rgba(226,161,60,.03));
+  border:1px solid var(--amber);border-radius:5px;padding:20px 22px;margin-bottom:2px;
+}
+.tb-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.tb-left{display:flex;flex-direction:column;gap:5px}
+.tb-flag{font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:.05em;color:var(--amber)}
+.tb-name{font-family:'Space Grotesk';font-size:22px;font-weight:700}
+.tb-rate{font-size:16px;color:var(--text)}
+.tb-divider{height:1px;background:rgba(226,161,60,.25);margin:18px 0 16px}
+.tb-area{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tb-area-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.area-row.area-row--tb{margin-bottom:0;max-width:220px}
+.tb-total{font-size:12.5px;color:var(--muted);margin-left:auto;white-space:nowrap;transition:color .2s ease}
+.tb-total.flash{color:#fff}
+@media (max-width:560px){
+  .tb-area{flex-direction:column;align-items:flex-start;gap:10px}
+  .tb-total{margin-left:0}
+  .area-row.area-row--tb{max-width:none;width:100%}
+}
+
+.acc-wrap{margin-top:22px}
 
 /* ============================= MATERIAL SPEC / PAPER ============================= */
-.paper-wrap{background:var(--paper);color:var(--paper-ink);border-radius:6px;overflow:hidden}
-.tab-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-.tab-btn{
-  background:transparent;border:1px solid var(--line);color:var(--muted);
-  padding:9px 15px;border-radius:2px;font-size:13px;cursor:pointer;transition:.15s;
+.acc-wrap{background:var(--paper);color:var(--paper-ink);border-radius:6px;overflow:hidden}
+.acc-item{border-bottom:1px solid #cfc4a8}
+.acc-item:last-child{border-bottom:none}
+.acc-header{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:20px 22px;cursor:pointer;background:transparent;border:none;width:100%;
+  text-align:left;font-family:'Space Grotesk';color:var(--paper-ink);
 }
-.tab-btn:hover{color:var(--text);border-color:var(--blue)}
-.tab-btn.active{background:var(--blue);border-color:var(--blue);color:#08131f;font-weight:600}
-.spec-sheet{padding:30px 32px 26px}
-.spec-sheet-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid var(--paper-ink);padding-bottom:14px;margin-bottom:8px}
-.spec-sheet-head h4{font-size:19px}
-.spec-sheet-head .code{font-family:'JetBrains Mono';font-size:11px;color:#6b5f47;letter-spacing:.05em}
-.spec-row{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;padding:13px 0;border-bottom:1px dashed #b9ac8c}
-.spec-row:last-child{border-bottom:none}
-.spec-row .label{font-size:14px;font-weight:500}
-.spec-row .val{font-family:'JetBrains Mono';font-size:12.5px;color:#544a37;text-align:right}
-@media (max-width:640px){.spec-row{grid-template-columns:1fr}.spec-row .val{text-align:left;margin-top:2px}}
+.acc-header .ah-left{display:flex;flex-direction:column;gap:3px}
+.acc-header .ah-title{font-size:16.5px;font-weight:600}
+.acc-header .ah-code{font-family:'JetBrains Mono';font-size:10.5px;color:#7a6d51;letter-spacing:.05em}
+.acc-header .ah-icon{
+  width:26px;height:26px;border:1.5px solid var(--paper-ink);border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;
+  transition:transform .25s ease;
+}
+.acc-item.open .ah-icon{transform:rotate(45deg)}
+.acc-item.open .acc-header{background:rgba(30,25,18,.05)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.acc-body-inner{padding:0 22px 20px}
+.acc-row{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;padding:11px 0;border-bottom:1px dashed #b9ac8c}
+.acc-row:last-child{border-bottom:none}
+.acc-row .label{font-size:13.5px;font-weight:500}
+.acc-row .val{font-family:'JetBrains Mono';font-size:12px;color:#544a37;text-align:right}
+@media (max-width:640px){.acc-row{grid-template-columns:1fr}.acc-row .val{text-align:left;margin-top:2px}}
 
 /* ============================= PAYMENT STAGES ============================= */
-.pay-total-line{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:30px;padding:16px 20px;border:1px solid var(--line);border-radius:4px;background:var(--ink-2)}
+.pay-total-line{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:22px;padding:16px 20px;border:1px solid var(--line);border-radius:4px;background:var(--ink-2)}
 .pay-total-line .l{color:var(--muted);font-size:13.5px}
-.pay-total-line .r{font-family:'Space Grotesk';font-size:22px;font-weight:700;color:var(--amber)}
+.pay-total-line .r{font-family:'Space Grotesk';font-size:22px;font-weight:700;color:var(--amber);transition:color .2s ease}
+.pay-total-line .r.flash{color:#fff}
+
+/* progress simulator control */
+.progress-control{margin-bottom:20px}
+.prog-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.prog-label{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+.prog-stage{font-size:12.5px;color:var(--amber)}
+#progressRange{
+  -webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:2px;
+  background:var(--line);cursor:pointer;
+}
+#progressRange::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);
+  border:3px solid var(--ink);box-shadow:0 0 0 4px rgba(226,161,60,.22);cursor:pointer;margin-top:-1px;
+}
+#progressRange::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid var(--ink);box-shadow:0 0 0 4px rgba(226,161,60,.22);cursor:pointer}
+#progressRange::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+
+/* released / remaining stat pair */
+.pay-stats{display:flex;gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:34px}
+.pay-stat{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--line)}
+.pay-stat:last-child{border-right:none}
+.ps-label{font-size:11.5px;color:var(--muted-2);letter-spacing:.03em}
+.ps-value{font-family:'Space Grotesk';font-size:20px;font-weight:700;transition:color .2s ease}
+.ps-pct{font-size:11.5px;color:var(--muted)}
+
 .timeline{display:grid;grid-template-columns:repeat(8,1fr);gap:0;position:relative}
-.timeline::before{content:"";position:absolute;top:17px;left:0;right:0;height:1px;background:var(--line)}
-@media (max-width:980px){.timeline{grid-template-columns:1fr;gap:0}.timeline::before{top:0;bottom:0;left:17px;right:auto;width:1px;height:auto}}
-.tl-node{position:relative;padding:0 14px 26px 0;text-align:left}
+@media (max-width:980px){.timeline{grid-template-columns:1fr;gap:0}}
+.tl-node{position:relative;padding:0 14px 26px 0;text-align:left;cursor:pointer;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s ease, transform .5s ease, padding-bottom .35s ease;}
+.timeline.in-view .tl-node{opacity:1;transform:translateY(0)}
+.timeline.in-view .tl-node:nth-child(2){transition-delay:.05s}
+.timeline.in-view .tl-node:nth-child(3){transition-delay:.1s}
+.timeline.in-view .tl-node:nth-child(4){transition-delay:.15s}
+.timeline.in-view .tl-node:nth-child(5){transition-delay:.2s}
+.timeline.in-view .tl-node:nth-child(6){transition-delay:.25s}
+.timeline.in-view .tl-node:nth-child(7){transition-delay:.3s}
+.timeline.in-view .tl-node:nth-child(8){transition-delay:.35s}
+.timeline.in-view .tl-node:nth-child(9){transition-delay:.4s}
 @media (max-width:980px){.tl-node{padding:0 0 26px 46px;display:flex;flex-direction:column}}
+.tl-node.done{padding-bottom:10px}
+@media (max-width:980px){.tl-node.done{padding-bottom:10px}}
 .tl-dot{
-  width:34px;height:34px;border-radius:50%;background:var(--ink);border:1.5px solid var(--blue);
-  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:11.5px;font-weight:700;color:var(--blue);
-  position:relative;z-index:1;margin-bottom:12px;
+  width:34px;height:34px;border-radius:50%;background:var(--ink);border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:11.5px;font-weight:700;color:var(--muted-2);
+  position:relative;z-index:2;margin-bottom:12px;
+  transition:background .25s ease, border-color .25s ease, color .25s ease, transform .2s ease, width .3s ease, height .3s ease, font-size .3s ease;
 }
 @media (max-width:980px){.tl-dot{position:absolute;left:0;margin-bottom:0}}
-.tl-node.done .tl-dot{background:var(--blue);color:#08131f}
-.tl-label{font-size:13.5px;font-weight:600;margin-bottom:4px}
-.tl-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5}
-.tl-amt{font-family:'JetBrains Mono';font-size:12.5px;color:var(--amber)}
+.tl-node:hover .tl-dot{transform:scale(1.08)}
+.tl-node.done .tl-dot{background:var(--blue);color:#08131f;border-color:var(--blue);width:26px;height:26px;font-size:9.5px}
+.tl-node.current .tl-dot{background:var(--amber);color:#20140a;border-color:var(--amber);animation:tlPulse 1.7s ease-in-out infinite}
+.tl-node.future{opacity:1}
+.tl-node.future .tl-label,.tl-node.future .tl-desc,.tl-node.future .tl-amt{opacity:.5}
+@keyframes tlPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(226,161,60,.45)}
+  50%{box-shadow:0 0 0 9px rgba(226,161,60,0)}
+}
+.tl-label{font-size:13.5px;font-weight:600;margin-bottom:4px;transition:opacity .2s ease, margin-bottom .3s ease}
+.tl-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;max-height:60px;opacity:1;overflow:hidden;transition:opacity .25s ease, max-height .35s ease, margin-bottom .3s ease}
+.tl-amt{font-family:'JetBrains Mono';font-size:12.5px;color:var(--amber);max-height:22px;opacity:1;overflow:hidden;display:block;transition:opacity .2s ease, max-height .35s ease}
+
+/* previous steps collapse to a single line once the process moves on, so every
+   stage can stay visible in the same viewport */
+.tl-node.done .tl-label{margin-bottom:0}
+.tl-node.done .tl-desc{max-height:0;opacity:0;margin-bottom:0}
+.tl-node.done .tl-amt{max-height:0;opacity:0}
 
 /* ============================= CALCULATOR ============================= */
 .calc-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:flex-start}
@@ -345,10 +487,10 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
   <div class="nav-inner">
     <div class="brand"><span class="brand-mark"></span><span>INTERIOARC BUILDS<small>Design · Structure · Handover</small></span></div>
     <nav class="nav-links" id="navLinks">
+      <a href="#how">Process</a>
       <a href="#packages">Packages</a>
-      <a href="#materials">Materials</a>
-      <a href="#payment">Payment</a>
       <a href="#calculator">Calculator</a>
+      <a href="#payment">Payment</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -377,112 +519,100 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
   </div>
 </section>
 
+<!-- ============================= HOW IT WORKS ============================= -->
+<section class="section container" id="how">
+  <div class="section-title-solo">
+    <div class="eyebrow">OUR PROCESS</div>
+    <h2>How a build moves from meeting to move-in</h2>
+    <p class="sub">Five stages, start to finish. Scroll through, or just wait a moment — it moves on its own.</p>
+  </div>
+
+  <div class="how-track" id="howTrack">
+    <div class="how-card" data-idx="0">
+      <div class="how-num">01 / MEET</div>
+      <h4>Meet</h4>
+      <p>A site visit and requirement discussion — plot size, budget, layout preferences and the package tier that fits.</p>
+    </div>
+    <div class="how-card" data-idx="1">
+      <div class="how-num">02 / DESIGN</div>
+      <h4>Design</h4>
+      <p>Architectural, structural and electrical drawings plus a 3D elevation, finalized and signed off with you.</p>
+    </div>
+    <div class="how-card" data-idx="2">
+      <div class="how-num">03 / SANCTION</div>
+      <h4>Submit for sanction</h4>
+      <p>Drawings submitted to the local planning authority for plan sanction and approvals before any excavation begins.</p>
+    </div>
+    <div class="how-card" data-idx="3">
+      <div class="how-num">04 / MOBILIZE</div>
+      <h4>Mobilization</h4>
+      <p>Site engineer deployed, materials procured, and temporary power/water arranged ahead of ground-breaking.</p>
+    </div>
+    <div class="how-card" data-idx="4">
+      <div class="how-num">05 / EXECUTE</div>
+      <h4>Execution</h4>
+      <p>Milestone-based construction from foundation to handover, with weekly architect visits and sign-offs at every slab.</p>
+    </div>
+  </div>
+
+  <div class="how-rail" id="howRail">
+    <div class="how-rail-line"></div>
+    <button class="how-tick active" data-idx="0" aria-label="Meet"><span>01</span></button>
+    <button class="how-tick" data-idx="1" aria-label="Design"><span>02</span></button>
+    <button class="how-tick" data-idx="2" aria-label="Submit for sanction"><span>03</span></button>
+    <button class="how-tick" data-idx="3" aria-label="Mobilization"><span>04</span></button>
+    <button class="how-tick" data-idx="4" aria-label="Execution"><span>05</span></button>
+  </div>
+</section>
+
 <!-- ============================= COST COMPARISON / PACKAGES ============================= -->
 <section class="section container" id="packages">
   <div class="section-title-solo">
-    <div class="eyebrow">COST COMPARISON</div>
-    <h2>Three build packages, one fixed rate each</h2>
-    <p class="sub">Every package covers structure, MEP and finishing for a full G+1 home — the difference is in the brands and finish level specified below. Signature reflects our current published BOQ; Essential and Elite are lighter and upgraded variants for comparison.</p>
+    <div class="eyebrow">COST &amp; SPECIFICATION</div>
+    <h2>Choose a package, see exactly what's inside</h2>
+    <p class="sub">Slide between packages to compare the rate and the full material specification — sheet by sheet, the way our site engineers track it on site.</p>
   </div>
+  <span id="materials" style="position:relative;display:block;top:-84px" aria-hidden="true"></span>
 
-  <div class="tiers-grid">
-    <!-- ESSENTIAL -->
-    <div class="tier" data-tier="essential" data-rate="1950">
-      <span class="tick-br"></span><span class="tick-bl"></span>
-      <h3>Essential</h3>
-      <div class="tier-sub">Budget-conscious, quality-checked build</div>
-      <div class="rate"><span class="num">₹1,950</span><span class="unit">/ sqft</span></div>
-      <div class="est-total">1,850 sqft → <b class="mono">₹36,07,500</b> estimated</div>
-      <ul>
-        <li>Secondary-brand TMT steel &amp; 53-grade cement</li>
-        <li>Vitrified tiles 2'x2', anti-skid balcony/parking</li>
-        <li>Granite counter, 18mm nosing, single sink</li>
-        <li>Flush doors throughout, UPVC 2-track windows</li>
-        <li>Cera-equivalent CP fittings &amp; sanitaryware</li>
-        <li>Site engineer + fortnightly architect visit</li>
-      </ul>
-      <button class="btn ghost block use-tier" data-tier="essential">Use in calculator</button>
+  <div class="tier-slider-wrap">
+    <div class="tier-slider-labels" id="tierLabels">
+      <button type="button" data-tier="essential">Essential</button>
+      <button type="button" data-tier="signature">Signature</button>
+      <button type="button" data-tier="elite">Elite</button>
     </div>
-
-    <!-- SIGNATURE (from PDF) -->
-    <div class="tier featured" data-tier="signature" data-rate="2300">
-      <span class="tick-br"></span><span class="tick-bl"></span>
-      <span class="tier-flag">CURRENT BOQ</span>
-      <h3>Signature</h3>
-      <div class="tier-sub">Our published specification, as quoted</div>
-      <div class="rate"><span class="num">₹2,300</span><span class="unit">/ sqft</span></div>
-      <div class="est-total">1,850 sqft → <b class="mono">₹42,55,000</b> total</div>
-      <ul>
-        <li>Meenakshi-equivalent steel, 6" block work, 10' ceiling</li>
-        <li>Granite counter 40mm nosing, Futura/Carysil sink</li>
-        <li>Vitrified 4'x2' tiles, granite staircase</li>
-        <li>Teak main door, UPVC windows with mosquito mesh</li>
-        <li>Jaguar Esco-equivalent CP fittings, Astral plumbing</li>
-        <li>5,000L sump + 1,000L overhead tank, UPS wiring provision</li>
-      </ul>
-      <button class="btn primary block use-tier" data-tier="signature">Use in calculator</button>
-    </div>
-
-    <!-- ELITE -->
-    <div class="tier" data-tier="elite" data-rate="2750">
-      <span class="tick-br"></span><span class="tick-bl"></span>
-      <h3>Elite</h3>
-      <div class="tier-sub">Premium brands, added comfort systems</div>
-      <div class="rate"><span class="num">₹2,750</span><span class="unit">/ sqft</span></div>
-      <div class="est-total">1,850 sqft → <b class="mono">₹50,87,500</b> estimated</div>
-      <ul>
-        <li>Tata Tiscon-equivalent steel, upgraded waterproofing</li>
-        <li>Modular kitchen: soft-close base + overhead units</li>
-        <li>Large-format vitrified / marble option for living</li>
-        <li>Veneer-finish teak main door with digital lock provision</li>
-        <li>Kohler/Jaguar Continental CP fittings</li>
-        <li>False ceiling in living &amp; bedrooms, home-automation wiring</li>
-      </ul>
-      <button class="btn ghost block use-tier" data-tier="elite">Use in calculator</button>
+    <div class="tier-slider-track">
+      <div class="tier-ticks"><span></span><span></span><span></span></div>
+      <input type="range" id="tierRange" min="0" max="2" step="1" value="1" aria-label="Select package tier">
     </div>
   </div>
-  <p class="tier-foot-note">Rates shown are per sqft of built-up area for a G+1, 3BHK home and exclude civic/utility charges, borewell and any material upgrade beyond the specified base brand — see "What's arranged separately" further down this page. Essential and Elite are indicative variants built for comparison against our current Signature BOQ; final specification is confirmed at agreement stage.</p>
-</section>
 
-<!-- ============================= MATERIAL SPEC SHEET ============================= -->
-<section class="section container" id="materials">
-  <div class="section-title-solo">
-    <div class="eyebrow">MATERIAL &amp; SPECIFICATION</div>
-    <h2>The Signature BOQ, sheet by sheet</h2>
-    <p class="sub">Full specification for the ₹2,300/sqft package, grouped the way our site engineers track it — drawings, structure, wet areas, openings, finishes and services.</p>
+  <div class="tier-banner" id="tierBanner">
+    <div class="tb-top">
+      <div class="tb-left">
+        <span class="tb-flag" id="tbFlag">Current BOQ</span>
+        <span class="tb-name" id="tbName">Signature</span>
+      </div>
+      <span class="tb-rate mono" id="tbRate">₹2,300 / sqft</span>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-area">
+      <span class="tb-area-label">Built-up area (sqft)</span>
+      <div class="area-row area-row--tb">
+        <button class="step" id="areaMinus" aria-label="decrease area">−</button>
+        <input type="number" id="areaInput" value="1850" min="200" step="10">
+        <button class="step" id="areaPlus" aria-label="increase area">+</button>
+      </div>
+      <span class="tb-total mono" id="tbTotal">≈ ₹42,55,000 for 1,850 sqft</span>
+    </div>
   </div>
 
-  <div class="tab-row" id="tabRow">
-    <button class="tab-btn active" data-tab="drawings">Drawings</button>
-    <button class="tab-btn" data-tab="structure">Structure</button>
-    <button class="tab-btn" data-tab="kitchen">Kitchen</button>
-    <button class="tab-btn" data-tab="bath">Bathroom</button>
-    <button class="tab-btn" data-tab="openings">Doors &amp; windows</button>
-    <button class="tab-btn" data-tab="tiling">Tile work</button>
-    <button class="tab-btn" data-tab="paint">Painting</button>
-    <button class="tab-btn" data-tab="electrical">Electrical</button>
-    <button class="tab-btn" data-tab="misc">Waterproofing &amp; misc.</button>
-  </div>
+  <div class="acc-wrap" id="specAccordion"><!-- injected --></div>
 
-  <div class="paper-wrap">
-    <div class="spec-sheet" id="specSheet"><!-- injected --></div>
-  </div>
-</section>
+  <p class="tier-foot-note">Rates are per sqft of built-up area for a G+1, 3BHK home and exclude civic/utility charges, borewell and any material upgrade beyond the specified brand — see "what's arranged separately" further down this page. Signature reflects our currently published BOQ; Essential and Elite are indicative variants for comparison, confirmed at agreement stage.</p>
 
-<!-- ============================= PAYMENT STAGES ============================= -->
-<section class="section container" id="payment">
-  <div class="section-title-solo">
-    <div class="eyebrow">PAYMENT SCHEDULE</div>
-    <h2>Released against visible progress, not the calendar</h2>
-    <p class="sub">Eight milestones, each tied to a physical stage of construction your site engineer signs off on. Amounts below update automatically with your calculator selection.</p>
-  </div>
-
-  <div class="pay-total-line">
-    <div class="l">Contract value used for this schedule</div>
-    <div class="r mono" id="payTotalDisplay">₹42,55,000</div>
-  </div>
-
-  <div class="timeline" id="timeline"><!-- injected --></div>
+  <button class="btn primary" id="usePkgBtn" style="margin-top:22px">Use this package in the calculator</button>
 </section>
 
 <!-- ============================= CALCULATOR ============================= -->
@@ -490,7 +620,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
   <div class="section-title-solo">
     <div class="eyebrow">CUSTOM QUOTE</div>
     <h2>Build your own quotation</h2>
-    <p class="sub">Pick a package, set your built-up area, and add only the upgrades you want. The invoice sheet on the right — and the payment schedule above — update as you go.</p>
+    <p class="sub">Pick a package below, add the upgrades you want — the built-up area you set above carries through automatically. The invoice sheet on the right and the payment schedule below update as you go.</p>
   </div>
 
   <div class="calc-grid">
@@ -500,13 +630,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
         <button class="tier-select" data-tier="essential">Essential<b>₹1,950</b></button>
         <button class="tier-select active" data-tier="signature">Signature<b>₹2,300</b></button>
         <button class="tier-select" data-tier="elite">Elite<b>₹2,750</b></button>
-      </div>
-
-      <span class="field-label">Built-up area (sqft)</span>
-      <div class="area-row">
-        <button class="step" id="areaMinus" aria-label="decrease area">−</button>
-        <input type="number" id="areaInput" value="1850" min="200" step="10">
-        <button class="step" id="areaPlus" aria-label="increase area">+</button>
       </div>
 
       <span class="field-label">Add-on services</span>
@@ -528,6 +651,43 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
       <p class="inv-note">Estimate only. Excludes civic/BESCOM/BWSSB charges, borewell, approval fees and material upgrades beyond the specified brand, as listed under "what's arranged separately."</p>
     </div>
   </div>
+</section>
+
+<!-- ============================= PAYMENT STAGES ============================= -->
+<section class="section container" id="payment">
+  <div class="section-title-solo">
+    <div class="eyebrow">PAYMENT SCHEDULE</div>
+    <h2>Released against visible progress, not the calendar</h2>
+    <p class="sub">Eight milestones, each tied to a physical stage of construction your site engineer signs off on. Drag the slider — or tap any stage — to simulate where a build currently stands.</p>
+  </div>
+
+  <div class="pay-total-line">
+    <div class="l">Contract value used for this schedule</div>
+    <div class="r mono" id="payTotalDisplay">₹42,55,000</div>
+  </div>
+
+  <div class="progress-control">
+    <div class="prog-head">
+      <span class="prog-label">Simulate site progress</span>
+      <span class="prog-stage mono" id="progStageLabel">Stage 1 of 8 — Booking &amp; agreement</span>
+    </div>
+    <input type="range" id="progressRange" min="0" max="8" step="1" value="0" aria-label="Simulate construction progress">
+  </div>
+
+  <div class="pay-stats">
+    <div class="pay-stat">
+      <span class="ps-label">Released so far</span>
+      <span class="ps-value mono" id="paySoFar">₹0</span>
+      <span class="ps-pct mono" id="paySoFarPct">0%</span>
+    </div>
+    <div class="pay-stat">
+      <span class="ps-label">Remaining</span>
+      <span class="ps-value mono" id="payRemaining">₹0</span>
+      <span class="ps-pct mono" id="payRemainingPct">100%</span>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"><!-- injected --></div>
 </section>
 
 <!-- ============================= PROJECTS ============================= -->
@@ -645,8 +805,10 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="foot-cols">
       <div class="foot-col">
         <h5>EXPLORE</h5>
+        <a href="#how">How it works</a>
         <a href="#packages">Packages</a>
         <a href="#materials">Material spec</a>
+        <a href="#calculator">Custom quote</a>
         <a href="#payment">Payment stages</a>
         <a href="#projects">Completed projects</a>
       </div>
@@ -695,62 +857,179 @@ const TIERS = {
   elite:     {label:"Elite", rate:2750}
 };
 
-const SPEC_DATA = {
-  drawings: {title:"Design &amp; drawings", code:"SHEET 01 / DWG", rows:[
-    ["Architectural drawings","Included, all floors"],
-    ["3D elevation","1 design, 2 revisions"],
-    ["Structural drawings","RCC detailing incl."],
-    ["Electrical drawings","Layout + points"]
-  ]},
-  structure: {title:"Structure", code:"SHEET 02 / STR", rows:[
-    ["Steel","Meenakshi or equivalent"],
-    ["Cement","53 grade"],
-    ["Block work","6\" solid blocks"],
-    ["Excavation depth","Min. 6' for footing/column"],
-    ["Ceiling height","10' finished floor level"],
-    ["Plinth foundation","Size stone masonry beneath beam"],
-    ["Roof slab thickness","6\" (125mm)"]
-  ]},
-  kitchen: {title:"Kitchen", code:"SHEET 03 / KIT", rows:[
-    ["Counter top","Granite, 40mm nosing · ₹120/sqft base"],
-    ["Wall dado tiles","Ceramic up to 2' · ₹80/sqft base"],
-    ["Sink","Futura / Carysil or equiv., up to ₹8,000"]
-  ]},
-  bath: {title:"Bathroom", code:"SHEET 04 / BTH", rows:[
-    ["Wall dado","Ceramic to ceiling height · ₹80/sqft base"],
-    ["CP fittings &amp; sanitaryware","Jaguar Esco or equivalent"],
-    ["Plumbing pipes","Astral"]
-  ]},
-  openings: {title:"Doors &amp; windows", code:"SHEET 05 / OPN", rows:[
-    ["Main door","Burma Teak frame, 38mm teak shutter"],
-    ["Bedroom doors","Membrane/flush + laminate, Ghana/Honne teak frame"],
-    ["Windows","UPVC frame, mosquito mesh, 2.5 track"],
-    ["Bathroom/toilet doors","WPVC"]
-  ]},
-  tiling: {title:"Tile work", code:"SHEET 06 / TIL", rows:[
-    ["Living / dining / bedrooms","Vitrified 4'x2' or 2'x2' · ₹55/sqft base"],
-    ["Staircase","Granite · ₹90/sqft base"],
-    ["Balcony &amp; parking","Anti-skid tiles · ₹45/sqft base"]
-  ]},
-  paint: {title:"Painting", code:"SHEET 07 / PNT", rows:[
-    ["Internal","Primer + 2 coat putty + 2 coat premium emulsion"],
-    ["External","Primer + ACE exterior, 2 coats"],
-    ["MS works","1 coat primer + 2 coat MS enamel"],
-    ["Main door","Melamine polish finish"]
-  ]},
-  electrical: {title:"Electrical works", code:"SHEET 08 / ELE", rows:[
-    ["Wiring","Finolex or equivalent, fireproof"],
-    ["Switches &amp; sockets","GM or equivalent"],
-    ["UPS provision","Wiring included"]
-  ]},
-  misc: {title:"Waterproofing &amp; miscellaneous", code:"SHEET 09 / MSC", rows:[
-    ["Toilet waterproofing","Sunken coat + plastering"],
-    ["Terrace waterproofing","Coating + screed concrete to slope"],
-    ["Parapet wall","6\" solid block, 3'6\" ht., plastered both sides"],
-    ["Underground sump","5,000 ltr capacity"],
-    ["Overhead tank","1,000 ltr capacity"],
-    ["Staircase railing","MS railing · ₹850/sqft"]
-  ]}
+const TIER_SPECS = {
+  essential: {
+    drawings: {title:"Design &amp; drawings", code:"SHEET 01 / DWG", rows:[
+      ["Architectural drawings","Included, all floors"],
+      ["3D elevation","1 design, 1 revision"],
+      ["Structural drawings","RCC detailing incl."],
+      ["Electrical drawings","Layout + points"]
+    ]},
+    structure: {title:"Structure", code:"SHEET 02 / STR", rows:[
+      ["Steel","Secondary brand, TMT equivalent"],
+      ["Cement","53 grade"],
+      ["Block work","6\" solid blocks"],
+      ["Excavation depth","Min. 5' for footing/column"],
+      ["Ceiling height","9'6\" finished floor level"],
+      ["Plinth foundation","Size stone masonry beneath beam"],
+      ["Roof slab thickness","5\" (115mm)"]
+    ]},
+    kitchen: {title:"Kitchen", code:"SHEET 03 / KIT", rows:[
+      ["Counter top","Granite, 18mm nosing · ₹100/sqft base"],
+      ["Wall dado tiles","Ceramic up to 2' · ₹70/sqft base"],
+      ["Sink","Cera or equivalent, up to ₹5,000"]
+    ]},
+    bath: {title:"Bathroom", code:"SHEET 04 / BTH", rows:[
+      ["Wall dado","Ceramic up to 2' · ₹70/sqft base"],
+      ["CP fittings &amp; sanitaryware","Cera or equivalent"],
+      ["Plumbing pipes","Supreme or equivalent"]
+    ]},
+    openings: {title:"Doors &amp; windows", code:"SHEET 05 / OPN", rows:[
+      ["Main door","Flush door, laminate finish"],
+      ["Bedroom doors","Flush doors with laminate"],
+      ["Windows","UPVC frame, 2-track, no mesh"],
+      ["Bathroom/toilet doors","PVC"]
+    ]},
+    tiling: {title:"Tile work", code:"SHEET 06 / TIL", rows:[
+      ["Living / dining / bedrooms","Vitrified 2'x2' · ₹40/sqft base"],
+      ["Staircase","Ceramic tile · ₹55/sqft base"],
+      ["Balcony &amp; parking","Anti-skid tiles · ₹35/sqft base"]
+    ]},
+    paint: {title:"Painting", code:"SHEET 07 / PNT", rows:[
+      ["Internal","Primer + 1 coat putty + 2 coat emulsion"],
+      ["External","Primer + 1 coat exterior paint"],
+      ["MS works","1 coat primer + 1 coat MS enamel"],
+      ["Main door","Enamel paint finish"]
+    ]},
+    electrical: {title:"Electrical works", code:"SHEET 08 / ELE", rows:[
+      ["Wiring","Standard PVC insulated"],
+      ["Switches &amp; sockets","ISI-marked standard range"],
+      ["UPS provision","Not included"]
+    ]},
+    misc: {title:"Waterproofing &amp; miscellaneous", code:"SHEET 09 / MSC", rows:[
+      ["Toilet waterproofing","Sunken coat, standard"],
+      ["Terrace waterproofing","Basic coating to slope"],
+      ["Parapet wall","6\" solid block, 3' ht., plastered both sides"],
+      ["Underground sump","3,000 ltr capacity"],
+      ["Overhead tank","750 ltr capacity"],
+      ["Staircase railing","MS railing · ₹650/sqft"]
+    ]}
+  },
+  signature: {
+    drawings: {title:"Design &amp; drawings", code:"SHEET 01 / DWG", rows:[
+      ["Architectural drawings","Included, all floors"],
+      ["3D elevation","1 design, 2 revisions"],
+      ["Structural drawings","RCC detailing incl."],
+      ["Electrical drawings","Layout + points"]
+    ]},
+    structure: {title:"Structure", code:"SHEET 02 / STR", rows:[
+      ["Steel","Meenakshi or equivalent"],
+      ["Cement","53 grade"],
+      ["Block work","6\" solid blocks"],
+      ["Excavation depth","Min. 6' for footing/column"],
+      ["Ceiling height","10' finished floor level"],
+      ["Plinth foundation","Size stone masonry beneath beam"],
+      ["Roof slab thickness","6\" (125mm)"]
+    ]},
+    kitchen: {title:"Kitchen", code:"SHEET 03 / KIT", rows:[
+      ["Counter top","Granite, 40mm nosing · ₹120/sqft base"],
+      ["Wall dado tiles","Ceramic up to 2' · ₹80/sqft base"],
+      ["Sink","Futura / Carysil or equiv., up to ₹8,000"]
+    ]},
+    bath: {title:"Bathroom", code:"SHEET 04 / BTH", rows:[
+      ["Wall dado","Ceramic to ceiling height · ₹80/sqft base"],
+      ["CP fittings &amp; sanitaryware","Jaguar Esco or equivalent"],
+      ["Plumbing pipes","Astral"]
+    ]},
+    openings: {title:"Doors &amp; windows", code:"SHEET 05 / OPN", rows:[
+      ["Main door","Burma Teak frame, 38mm teak shutter"],
+      ["Bedroom doors","Membrane/flush + laminate, Ghana/Honne teak frame"],
+      ["Windows","UPVC frame, mosquito mesh, 2.5 track"],
+      ["Bathroom/toilet doors","WPVC"]
+    ]},
+    tiling: {title:"Tile work", code:"SHEET 06 / TIL", rows:[
+      ["Living / dining / bedrooms","Vitrified 4'x2' or 2'x2' · ₹55/sqft base"],
+      ["Staircase","Granite · ₹90/sqft base"],
+      ["Balcony &amp; parking","Anti-skid tiles · ₹45/sqft base"]
+    ]},
+    paint: {title:"Painting", code:"SHEET 07 / PNT", rows:[
+      ["Internal","Primer + 2 coat putty + 2 coat premium emulsion"],
+      ["External","Primer + ACE exterior, 2 coats"],
+      ["MS works","1 coat primer + 2 coat MS enamel"],
+      ["Main door","Melamine polish finish"]
+    ]},
+    electrical: {title:"Electrical works", code:"SHEET 08 / ELE", rows:[
+      ["Wiring","Finolex or equivalent, fireproof"],
+      ["Switches &amp; sockets","GM or equivalent"],
+      ["UPS provision","Wiring included"]
+    ]},
+    misc: {title:"Waterproofing &amp; miscellaneous", code:"SHEET 09 / MSC", rows:[
+      ["Toilet waterproofing","Sunken coat + plastering"],
+      ["Terrace waterproofing","Coating + screed concrete to slope"],
+      ["Parapet wall","6\" solid block, 3'6\" ht., plastered both sides"],
+      ["Underground sump","5,000 ltr capacity"],
+      ["Overhead tank","1,000 ltr capacity"],
+      ["Staircase railing","MS railing · ₹850/sqft"]
+    ]}
+  },
+  elite: {
+    drawings: {title:"Design &amp; drawings", code:"SHEET 01 / DWG", rows:[
+      ["Architectural drawings","Included, all floors"],
+      ["3D elevation","1 design, unlimited revisions"],
+      ["Structural drawings","RCC detailing incl."],
+      ["Electrical drawings","Layout + automation conduit points"]
+    ]},
+    structure: {title:"Structure", code:"SHEET 02 / STR", rows:[
+      ["Steel","Tata Tiscon or equivalent"],
+      ["Cement","53 grade"],
+      ["Block work","6\" solid blocks + shear wall where needed"],
+      ["Excavation depth","Min. 7' for footing/column"],
+      ["Ceiling height","10'6\" finished floor level"],
+      ["Plinth foundation","Size stone masonry beneath beam"],
+      ["Roof slab thickness","6\" (125mm) with waterproof admixture"]
+    ]},
+    kitchen: {title:"Kitchen", code:"SHEET 03 / KIT", rows:[
+      ["Counter top","Granite/quartz, 40mm nosing, premium"],
+      ["Cabinets","Modular soft-close base + overhead units"],
+      ["Wall dado tiles","Ceramic full height · ₹95/sqft base"],
+      ["Sink","Premium Franke/Carysil, up to ₹15,000"]
+    ]},
+    bath: {title:"Bathroom", code:"SHEET 04 / BTH", rows:[
+      ["Wall dado","Premium tile, full height · ₹110/sqft base"],
+      ["CP fittings &amp; sanitaryware","Kohler / Jaguar Continental"],
+      ["Plumbing pipes","Astral CPVC + hot water lines"]
+    ]},
+    openings: {title:"Doors &amp; windows", code:"SHEET 05 / OPN", rows:[
+      ["Main door","Teak with veneer finish, digital lock provision"],
+      ["Bedroom doors","Veneer-finish flush doors"],
+      ["Windows","UPVC, 3-track with mesh + grill"],
+      ["Bathroom/toilet doors","Premium WPVC"]
+    ]},
+    tiling: {title:"Tile work", code:"SHEET 06 / TIL", rows:[
+      ["Living / dining","Large-format vitrified / marble option · ₹85/sqft base"],
+      ["Staircase","Premium granite · ₹120/sqft base"],
+      ["Balcony &amp; parking","Anti-skid tiles, premium · ₹55/sqft base"]
+    ]},
+    paint: {title:"Painting", code:"SHEET 07 / PNT", rows:[
+      ["Internal","Primer + putty + 3 coat premium emulsion"],
+      ["External","Primer + 2 coat premium exterior, texture option"],
+      ["MS works","Rust primer + 2 coat MS enamel"],
+      ["Main door","PU polish finish"]
+    ]},
+    electrical: {title:"Electrical works", code:"SHEET 08 / ELE", rows:[
+      ["Wiring","Fireproof + home-automation conduit provision"],
+      ["Switches &amp; sockets","Premium modular range"],
+      ["UPS provision","Wiring + inverter panel included"]
+    ]},
+    misc: {title:"Waterproofing &amp; miscellaneous", code:"SHEET 09 / MSC", rows:[
+      ["Toilet waterproofing","Sunken coat + membrane treatment"],
+      ["Terrace waterproofing","Membrane coat + screed concrete to slope"],
+      ["Parapet wall","6\" solid block, 3'6\" ht., plastered + coping"],
+      ["Underground sump","6,000 ltr capacity"],
+      ["Overhead tank","1,500 ltr capacity"],
+      ["Staircase railing","MS + glass railing · ₹1,100/sqft"]
+    ]}
+  }
 };
 
 const PAYMENT_STAGES = [
@@ -803,66 +1082,220 @@ function showToast(msg){
 const burger = document.getElementById("burgerBtn");
 const navLinks = document.getElementById("navLinks");
 burger.addEventListener("click", ()=>{
-  navLinks.classList.toggle("open");
-  burger.textContent = navLinks.classList.contains("open") ? "✕" : "☰";
+  const isOpen = navLinks.classList.toggle("open");
+  burger.textContent = isOpen ? "✕" : "☰";
+  document.body.classList.toggle("menu-open", isOpen);
 });
 navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click", ()=>{
   navLinks.classList.remove("open");
   burger.textContent = "☰";
+  document.body.classList.remove("menu-open");
 }));
 
-/* ============================= MATERIAL TABS ============================= */
-function renderSpecSheet(key){
-  const d = SPEC_DATA[key];
-  const rows = d.rows.map(r=>`
-    <div class="spec-row"><div class="label">${r[0]}</div><div class="val">${r[1]}</div></div>
-  `).join("");
-  document.getElementById("specSheet").innerHTML = `
-    <div class="spec-sheet-head"><h4>${d.title}</h4><div class="code">${d.code}</div></div>
-    ${rows}
-  `;
-}
-document.getElementById("tabRow").addEventListener("click", (e)=>{
-  const btn = e.target.closest(".tab-btn");
-  if(!btn) return;
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  renderSpecSheet(btn.dataset.tab);
-});
-renderSpecSheet("drawings");
+/* ============================= HOW IT WORKS (auto-scrolling horizontal carousel) ============================= */
+(function(){
+  const track = document.getElementById("howTrack");
+  const cards = Array.from(track.querySelectorAll(".how-card"));
+  const rail = document.getElementById("howRail");
+  const ticks = Array.from(rail.querySelectorAll(".how-tick"));
+  let howIndex = 0;
+  let howAutoTimer = null;
+  let howResumeTimer = null;
+  let userInteracting = false;
 
-/* ============================= TIER SELECTION (packages -> calculator) ============================= */
-document.querySelectorAll(".use-tier").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    setActiveTier(btn.dataset.tier);
-    document.getElementById("calculator").scrollIntoView({behavior:"smooth"});
-    showToast(TIERS[btn.dataset.tier].label + " package loaded into calculator");
+  function setActiveCard(i){
+    howIndex = ((i % cards.length) + cards.length) % cards.length;
+    cards.forEach((c,idx)=> c.classList.toggle("active", idx === howIndex));
+    ticks.forEach((t,idx)=> t.classList.toggle("active", idx === howIndex));
+  }
+
+  function scrollToCard(i){
+    const idx = ((i % cards.length) + cards.length) % cards.length;
+    const card = cards[idx];
+    track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: "smooth" });
+    setActiveCard(idx);
+  }
+
+  function nextCard(){ scrollToCard(howIndex + 1); }
+
+  function startHowAutoplay(){
+    if(howAutoTimer) return;
+    howAutoTimer = setInterval(()=>{
+      if(!userInteracting) nextCard();
+    }, 3200);
+  }
+  function pauseHowAutoplay(){
+    userInteracting = true;
+    clearTimeout(howResumeTimer);
+    howResumeTimer = setTimeout(()=>{ userInteracting = false; }, 4200);
+  }
+
+  ticks.forEach(t=>{
+    t.addEventListener("click", ()=>{
+      pauseHowAutoplay();
+      scrollToCard(+t.dataset.idx);
+    });
+  });
+
+  track.addEventListener("mouseenter", ()=>{ userInteracting = true; });
+  track.addEventListener("mouseleave", ()=>{ pauseHowAutoplay(); });
+  track.addEventListener("touchstart", pauseHowAutoplay, {passive:true});
+  track.addEventListener("wheel", pauseHowAutoplay, {passive:true});
+
+  // keep dots/active state in sync if the person scrolls the track manually
+  let scrollDebounce;
+  track.addEventListener("scroll", ()=>{
+    clearTimeout(scrollDebounce);
+    scrollDebounce = setTimeout(()=>{
+      let closest = 0, closestDist = Infinity;
+      cards.forEach((c,idx)=>{
+        const dist = Math.abs((c.offsetLeft - track.offsetLeft) - track.scrollLeft);
+        if(dist < closestDist){ closestDist = dist; closest = idx; }
+      });
+      setActiveCard(closest);
+    }, 120);
+  }, {passive:true});
+
+  const howObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        track.classList.add("in-view");
+        startHowAutoplay();
+        howObserver.disconnect();
+      }
+    });
+  }, {threshold:.25});
+  howObserver.observe(document.getElementById("how"));
+
+  setActiveCard(0);
+})();
+
+/* ============================= MATERIAL SPEC ACCORDION (tier-aware) ============================= */
+const specOrder = ["drawings","structure","kitchen","bath","openings","tiling","paint","electrical","misc"];
+function renderSpecAccordion(tier){
+  const data = TIER_SPECS[tier];
+  const wrap = document.getElementById("specAccordion");
+  wrap.innerHTML = specOrder.map((key,i)=>{
+    const d = data[key];
+    const rows = d.rows.map(r=>`
+      <div class="acc-row"><div class="label">${r[0]}</div><div class="val">${r[1]}</div></div>
+    `).join("");
+    return `
+      <div class="acc-item ${i===0?'open':''}" data-key="${key}">
+        <button class="acc-header" type="button" aria-expanded="${i===0}">
+          <span class="ah-left">
+            <span class="ah-title">${d.title}</span>
+            <span class="ah-code">${d.code}</span>
+          </span>
+          <span class="ah-icon">+</span>
+        </button>
+        <div class="acc-body"><div class="acc-body-inner">${rows}</div></div>
+      </div>
+    `;
+  }).join("");
+
+  wrap.querySelectorAll(".acc-item").forEach(item=>{
+    const header = item.querySelector(".acc-header");
+    const body = item.querySelector(".acc-body");
+    if(item.classList.contains("open")){
+      body.style.maxHeight = body.scrollHeight + "px";
+    }
+    header.addEventListener("click", ()=>{
+      const isOpen = item.classList.contains("open");
+      wrap.querySelectorAll(".acc-item.open").forEach(other=>{
+        if(other !== item){
+          other.classList.remove("open");
+          other.querySelector(".acc-header").setAttribute("aria-expanded","false");
+          other.querySelector(".acc-body").style.maxHeight = null;
+        }
+      });
+      if(isOpen){
+        item.classList.remove("open");
+        header.setAttribute("aria-expanded","false");
+        body.style.maxHeight = null;
+      } else {
+        item.classList.add("open");
+        header.setAttribute("aria-expanded","true");
+        body.style.maxHeight = body.scrollHeight + "px";
+      }
+    });
+  });
+}
+window.addEventListener("resize", ()=>{
+  document.querySelectorAll(".acc-item.open .acc-body").forEach(b=>{
+    b.style.maxHeight = b.scrollHeight + "px";
   });
 });
 
+/* ============================= TIER SELECTION (slider + labels + calculator, all in sync) ============================= */
+const TIER_ORDER = ["essential","signature","elite"];
+const tierRange = document.getElementById("tierRange");
+const tierLabels = document.getElementById("tierLabels");
+
 let currentTier = "signature";
+
+function updateRangeFill(){
+  const idx = TIER_ORDER.indexOf(currentTier);
+  const pct = (idx / (TIER_ORDER.length - 1)) * 100;
+  tierRange.style.background = `linear-gradient(to right, var(--amber) 0%, var(--amber) ${pct}%, var(--line) ${pct}%, var(--line) 100%)`;
+}
+
+function renderTierBanner(){
+  const tier = TIERS[currentTier];
+  const area = Math.max(0, +(document.getElementById("areaInput")?.value) || 1850);
+  document.getElementById("tbName").textContent = tier.label;
+  document.getElementById("tbRate").textContent = `₹${tier.rate.toLocaleString("en-IN")} / sqft`;
+  document.getElementById("tbTotal").textContent = `≈ ${rupee(tier.rate * area)} for ${area.toLocaleString("en-IN")} sqft`;
+  document.getElementById("tbFlag").textContent = currentTier === "signature" ? "Current BOQ" : "Indicative variant";
+}
+
 function setActiveTier(tier){
   currentTier = tier;
+
+  // slider + labels
+  tierRange.value = TIER_ORDER.indexOf(tier);
+  updateRangeFill();
+  tierLabels.querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tier === tier);
+  });
+
+  // banner + accordion
+  renderTierBanner();
+  renderSpecAccordion(tier);
+
+  // calculator tier buttons
   document.querySelectorAll("#calcTierRow .tier-select").forEach(b=>{
     b.classList.toggle("active", b.dataset.tier === tier);
   });
+
   compute();
 }
+
+tierRange.addEventListener("input", ()=> setActiveTier(TIER_ORDER[+tierRange.value]));
+tierLabels.querySelectorAll("button").forEach(b=>{
+  b.addEventListener("click", ()=> setActiveTier(b.dataset.tier));
+});
 document.querySelectorAll("#calcTierRow .tier-select").forEach(b=>{
   b.addEventListener("click", ()=>setActiveTier(b.dataset.tier));
+});
+document.getElementById("usePkgBtn").addEventListener("click", ()=>{
+  document.getElementById("calculator").scrollIntoView({behavior:"smooth"});
+  showToast(TIERS[currentTier].label + " package loaded into calculator");
 });
 
 /* ============================= AREA INPUT ============================= */
 const areaInput = document.getElementById("areaInput");
 document.getElementById("areaMinus").addEventListener("click", ()=>{
   areaInput.value = Math.max(200, (+areaInput.value||0) - 50);
+  renderTierBanner();
   compute();
 });
 document.getElementById("areaPlus").addEventListener("click", ()=>{
   areaInput.value = (+areaInput.value||0) + 50;
+  renderTierBanner();
   compute();
 });
-areaInput.addEventListener("input", compute);
+areaInput.addEventListener("input", ()=>{ renderTierBanner(); compute(); });
 
 /* ============================= ADD-ONS ============================= */
 const addonListEl = document.getElementById("addonList");
@@ -877,18 +1310,113 @@ addonListEl.querySelectorAll("input[type=checkbox]").forEach(cb=>{
   cb.addEventListener("change", compute);
 });
 
-/* ============================= PAYMENT TIMELINE ============================= */
-function renderTimeline(total){
+/* ============================= PAYMENT TIMELINE (automated progress simulator) ============================= */
+let currentProgressIdx = 0;   // number of stages completed so far
+let currentGrandTotal = 4255000;
+let autoplayTimer = null;
+const progressRange = document.getElementById("progressRange");
+
+/* Build the timeline markup once. Later updates only toggle classes/text in place
+   so nothing gets re-created or re-animated when the step changes. */
+function buildTimelineDOM(){
   const tl = document.getElementById("timeline");
   tl.innerHTML = PAYMENT_STAGES.map((s,i)=>`
-    <div class="tl-node ${i===0?'done':''}">
+    <div class="tl-node" data-idx="${i}">
       <div class="tl-dot">${s.pct}%</div>
       <div class="tl-label">${s.label}</div>
       <div class="tl-desc">${s.desc}</div>
-      <div class="tl-amt mono">${rupee(total * s.pct/100)}</div>
+      <div class="tl-amt mono" data-pct="${s.pct}">₹0</div>
     </div>
   `).join("");
+
+  tl.addEventListener("click", (e)=>{
+    const node = e.target.closest(".tl-node");
+    if(!node) return;
+    stopAutoplay();
+    currentProgressIdx = +node.dataset.idx;
+    progressRange.value = currentProgressIdx;
+    applyTimelineState();
+  });
 }
+
+/* Just updates state (done/current/future + amounts) — no DOM rebuild, no re-animation. */
+function applyTimelineState(){
+  const tl = document.getElementById("timeline");
+  tl.querySelectorAll(".tl-node").forEach(node=>{
+    const i = +node.dataset.idx;
+    const state = i < currentProgressIdx ? "done" : (i === currentProgressIdx ? "current" : "future");
+    node.classList.remove("done","current","future");
+    node.classList.add(state);
+    const amtEl = node.querySelector(".tl-amt");
+    const pct = +amtEl.dataset.pct;
+    amtEl.textContent = rupee(currentGrandTotal * pct/100);
+  });
+  updateProgressStats();
+}
+
+function renderTimeline(total){
+  currentGrandTotal = total;
+  const tl = document.getElementById("timeline");
+  if(!tl.dataset.built){
+    buildTimelineDOM();
+    tl.dataset.built = "1";
+  }
+  applyTimelineState();
+}
+
+function updateProgressStats(){
+  let releasedPct = 0;
+  for(let i=0;i<currentProgressIdx;i++){ releasedPct += PAYMENT_STAGES[i].pct; }
+  const remainingPct = 100 - releasedPct;
+  const released = currentGrandTotal * releasedPct/100;
+  const remaining = currentGrandTotal * remainingPct/100;
+
+  document.getElementById("paySoFar").textContent = rupee(released);
+  document.getElementById("paySoFarPct").textContent = releasedPct + "%";
+  document.getElementById("payRemaining").textContent = rupee(remaining);
+  document.getElementById("payRemainingPct").textContent = remainingPct + "%";
+
+  const label = currentProgressIdx >= PAYMENT_STAGES.length
+    ? "All stages complete — handed over"
+    : `Stage ${currentProgressIdx + 1} of ${PAYMENT_STAGES.length} — ${PAYMENT_STAGES[currentProgressIdx].label.replace(/&amp;/g,"&")}`;
+  document.getElementById("progStageLabel").textContent = label;
+}
+
+/* Auto-advance through every stage on its own, one at a time, stopping at the final stage */
+function startAutoplay(){
+  if(autoplayTimer) return;
+  autoplayTimer = setInterval(()=>{
+    if(currentProgressIdx < PAYMENT_STAGES.length){
+      currentProgressIdx++;
+      progressRange.value = currentProgressIdx;
+      applyTimelineState();
+    }
+    if(currentProgressIdx >= PAYMENT_STAGES.length){
+      stopAutoplay();
+    }
+  }, 5000);
+}
+function stopAutoplay(){
+  if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+}
+
+progressRange.addEventListener("input", ()=>{
+  stopAutoplay();
+  currentProgressIdx = +progressRange.value;
+  applyTimelineState();
+});
+
+/* Reveal the timeline (once, on first appearance only) and kick off the automated walk-through */
+const paymentObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      document.getElementById("timeline").classList.add("in-view");
+      startAutoplay();
+      paymentObserver.disconnect();
+    }
+  });
+}, {threshold:.2});
+paymentObserver.observe(document.getElementById("payment"));
 
 /* ============================= COMPUTE ============================= */
 function compute(){
@@ -913,7 +1441,11 @@ function compute(){
   document.getElementById("invBase").textContent = rupee(base);
   document.getElementById("invAddonRows").innerHTML = rowsHtml;
   document.getElementById("invTotal").textContent = rupee(total);
-  document.getElementById("payTotalDisplay").textContent = rupee(total);
+
+  const payTotalEl = document.getElementById("payTotalDisplay");
+  payTotalEl.textContent = rupee(total);
+  payTotalEl.classList.add("flash");
+  setTimeout(()=> payTotalEl.classList.remove("flash"), 300);
 
   renderTimeline(total);
 }
@@ -988,6 +1520,7 @@ document.getElementById("contactForm").addEventListener("submit", (e)=>{
 });
 
 /* ============================= INIT ============================= */
+setActiveTier("signature");
 compute();
 </script>
 </body>
