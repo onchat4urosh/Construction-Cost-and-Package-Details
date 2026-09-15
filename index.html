@@ -795,12 +795,12 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
   <div class="section-title-solo">
     <div class="eyebrow">PAYMENT SCHEDULE</div>
     <h2>Released against visible progress, not the calendar</h2>
-    <p class="sub">Eight milestones. Drag the slider — or tap any stage — to simulate where a build currently stands.</p>
+    <p class="sub">Eight milestones, each tied to a physical stage of construction your site engineer signs off on. Drag the slider — or tap any stage — to simulate where a build currently stands.</p>
   </div>
 
   <div class="pay-total-line">
     <div class="l">Contract value used for this schedule</div>
-    <div class="r mono" id="payTotalDisplay">₹47,17,500</div>
+    <div class="r mono" id="payTotalDisplay">₹42,55,000</div>
   </div>
 
   <div class="progress-control">
@@ -1595,8 +1595,115 @@ function calcCalc() {
 }
 
 /* ============================= PAYMENT SCHEDULE ============================= */
+let currentProgressIdx = 0;   // number of stages completed so far
+let currentGrandTotal = 4255000;
+let autoplayTimer = null;
+const progressRange = document.getElementById("progressRange");
+
+/* Build the timeline markup once. Later updates only toggle classes/text in place
+   so nothing gets re-created or re-animated when the step changes. */
+function buildTimelineDOM(){
+  const tl = document.getElementById("timeline");
+  tl.innerHTML = PAYMENT_STAGES.map((s,i)=>`
+    <div class="tl-node" data-idx="${i}">
+      <div class="tl-dot">${s.pct}%</div>
+      <div class="tl-label">${s.label}</div>
+      <div class="tl-desc">${s.desc}</div>
+      <div class="tl-amt mono" data-pct="${s.pct}">₹0</div>
+    </div>
+  `).join("");
+
+  tl.addEventListener("click", (e)=>{
+    const node = e.target.closest(".tl-node");
+    if(!node) return;
+    stopAutoplay();
+    currentProgressIdx = +node.dataset.idx;
+    progressRange.value = currentProgressIdx;
+    applyTimelineState();
+  });
+}
+
+/* Just updates state (done/current/future + amounts) — no DOM rebuild, no re-animation. */
+function applyTimelineState(){
+  const tl = document.getElementById("timeline");
+  tl.querySelectorAll(".tl-node").forEach(node=>{
+    const i = +node.dataset.idx;
+    const state = i < currentProgressIdx ? "done" : (i === currentProgressIdx ? "current" : "future");
+    node.classList.remove("done","current","future");
+    node.classList.add(state);
+    const amtEl = node.querySelector(".tl-amt");
+    const pct = +amtEl.dataset.pct;
+    amtEl.textContent = rupee(currentGrandTotal * pct/100);
+  });
+  updateProgressStats();
+}
+
+function renderTimeline(total){
+  currentGrandTotal = total;
+  const tl = document.getElementById("timeline");
+  if(!tl.dataset.built){
+    buildTimelineDOM();
+    tl.dataset.built = "1";
+  }
+  applyTimelineState();
+}
+
+function updateProgressStats(){
+  let releasedPct = 0;
+  for(let i=0;i<currentProgressIdx;i++){ releasedPct += PAYMENT_STAGES[i].pct; }
+  const remainingPct = 100 - releasedPct;
+  const released = currentGrandTotal * releasedPct/100;
+  const remaining = currentGrandTotal * remainingPct/100;
+
+  document.getElementById("paySoFar").textContent = rupee(released);
+  document.getElementById("paySoFarPct").textContent = releasedPct + "%";
+  document.getElementById("payRemaining").textContent = rupee(remaining);
+  document.getElementById("payRemainingPct").textContent = remainingPct + "%";
+
+  const label = currentProgressIdx >= PAYMENT_STAGES.length
+    ? "All stages complete — handed over"
+    : `Stage ${currentProgressIdx + 1} of ${PAYMENT_STAGES.length} — ${PAYMENT_STAGES[currentProgressIdx].label.replace(/&amp;/g,"&")}`;
+  document.getElementById("progStageLabel").textContent = label;
+}
+
+/* Auto-advance through every stage on its own, one at a time, stopping at the final stage */
+function startAutoplay(){
+  if(autoplayTimer) return;
+  autoplayTimer = setInterval(()=>{
+    if(currentProgressIdx < PAYMENT_STAGES.length){
+      currentProgressIdx++;
+      progressRange.value = currentProgressIdx;
+      applyTimelineState();
+    }
+    if(currentProgressIdx >= PAYMENT_STAGES.length){
+      stopAutoplay();
+    }
+  }, 5000);
+}
+function stopAutoplay(){
+  if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+}
+
+progressRange.addEventListener("input", ()=>{
+  stopAutoplay();
+  currentProgressIdx = +progressRange.value;
+  applyTimelineState();
+});
+
+/* Reveal the timeline (once, on first appearance only) and kick off the automated walk-through */
+const paymentObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      document.getElementById("timeline").classList.add("in-view");
+      startAutoplay();
+      paymentObserver.disconnect();
+    }
+  });
+}, {threshold:.2});
+paymentObserver.observe(document.getElementById("payment"));
+
 const payTotalDisplay = document.getElementById('payTotalDisplay');
-const progressRange = document.getElementById('progressRange');
+//const progressRange = document.getElementById('progressRange');
 const progStageLabel = document.getElementById('progStageLabel');
 const paySoFar = document.getElementById('paySoFar');
 const paySoFarPct = document.getElementById('paySoFarPct');
@@ -1608,7 +1715,7 @@ function updatePaymentSchedule(totalVal) {
   payTotalDisplay.textContent = rupee(totalVal);
   renderTimeline(totalVal, parseInt(progressRange.value));
 }
-
+/*
 function renderTimeline(totalVal, stageIdx) {
   timeline.innerHTML = '';
   let cumPct = 0;
@@ -1679,7 +1786,7 @@ const timelineObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.15 });
 timelineObserver.observe(timeline);
-
+*/
 /* ============================= PROJECTS ============================= */
 const projGrid = document.getElementById('projGrid');
 const projFilters = document.getElementById('projFilters');
