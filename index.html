@@ -28,6 +28,14 @@
   --radius-sm:  2px;
   --radius-md:  4px;
   --maxw:       1180px;
+  --bg: #090d16;
+      --card-bg: #0d1424;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --green-dot: #10b981;
+      --orange-dot: #f59e0b;
+      --blue-accent: #38bdf8;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
@@ -387,6 +395,20 @@ button{font-family:inherit}
 .addon .an small{display:block;color:var(--muted-2);font-size:11.5px;margin-top:2px}
 .addon .ap{font-family:'JetBrains Mono';font-size:12.5px;color:var(--muted);white-space:nowrap}
 
+/* Special Elite Package inclusive banner style */
+.elite-inclusive-msg {
+  padding: 16px;
+  border: 1px dashed var(--amber);
+  background: rgba(226, 161, 60, 0.08);
+  border-radius: 4px;
+  color: var(--amber);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  margin-top: 6px;
+}
+
 .invoice{background:var(--paper);color:var(--paper-ink);border-radius:6px;padding:26px 24px;position:sticky;top:88px;min-width:0}
 .invoice h4{font-size:16px;border-bottom:0px;padding-bottom:12px;margin-bottom:14px}
 .inv-row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed #b9ac8c}
@@ -460,7 +482,7 @@ button{font-family:inherit}
 
 /* ============================= FOOTER ============================= */
 footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px}
-.foot-grid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+.foot-grid{display:flex;justify-space-between;gap:30px;flex-wrap:wrap}
 .foot-brand p{color:var(--muted);font-size:13px;max-width:280px;margin-top:10px}
 .foot-cols{display:flex;gap:52px;flex-wrap:wrap}
 .foot-col h5{font-size:12.5px;color:var(--muted-2);letter-spacing:.05em;margin-bottom:14px}
@@ -489,6 +511,73 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
 ::selection{background:var(--amber);color:#20140a}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+.card-container { display: flex; flex-direction: column; gap: 16px; }
+
+    .collapsible-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .collapsible-card:hover { border-color: rgba(255, 255, 255, 0.2); }
+
+    /* CARD HEADER */
+    .card-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .header-title-group { display: flex; align-items: center; gap: 12px; }
+    
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .dot-green { background-color: var(--green-dot); box-shadow: 0 0 8px var(--green-dot); }
+    .dot-orange { background-color: var(--orange-dot); box-shadow: 0 0 8px var(--orange-dot); }
+
+    .card-num { font-size: 0.8rem; color: var(--blue-accent); font-family: monospace; }
+    .card-title { font-size: 1rem; font-weight: 700; color: #ffffff; letter-spacing: -0.2px; }
+
+    .chevron-icon {
+      width: 16px;
+      height: 16px;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    /* CARD BODY */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease;
+      opacity: 0;
+      padding: 0 20px;
+    }
+
+    .collapsible-card.open .card-body {
+      max-height: 1000px;
+      opacity: 1;
+      padding: 0 20px 20px 20px;
+      transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), opacity 0.3s ease;
+    }
+
+    .collapsible-card.open .chevron-icon { transform: rotate(180deg); stroke: var(--text); }
+
+    /* LIST & TEXT STYLING */
+    .info-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .info-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4; }
+
+    .check-icon { color: var(--green-dot); font-weight: bold; font-size: 0.95rem; }
+    .minus-icon { color: var(--orange-dot); font-weight: bold; font-size: 0.95rem; }
+
+    .card-description { font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -524,7 +613,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
 </section>
 
 <!-- ============================= HOW IT WORKS ============================= -->
-<!-- ============================= HOW IT WORKS ============================= -->
 <section class="section container" id="how">
   <div class="section-title-solo">
     <div class="eyebrow">OUR PROCESS</div>
@@ -537,7 +625,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="how-card" data-idx="0">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div class="how-num">01 / MEET</div>
-        <!-- Visual Graffiti: Site Handshake / Discussion -->
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85;">
           <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14M7 21h10a2 2 0 0 0 2-2V9H5v10a2 2 0 0 0 2 2z"/>
           <circle cx="12" cy="14" r="1.5"/>
@@ -551,7 +638,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="how-card" data-idx="1">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div class="how-num">02 / DESIGN</div>
-        <!-- Visual Graffiti: Architectural Blueprint Sketch -->
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85;">
           <path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h6M9 14h6M9 18h6"/>
           <path d="M18 3l3 3"/>
@@ -565,7 +651,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="how-card" data-idx="2">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div class="how-num">03 / SANCTION</div>
-        <!-- Visual Graffiti: Approved Document with Seal -->
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85;">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
@@ -580,7 +665,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="how-card" data-idx="3">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div class="how-num">04 / MOBILIZE</div>
-        <!-- Visual Graffiti: Site Setup & Equipment -->
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85;">
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
         </svg>
@@ -593,7 +677,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="how-card" data-idx="4">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div class="how-num">05 / EXECUTE</div>
-        <!-- Visual Graffiti: Completed Home / Handover -->
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85;">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
@@ -677,27 +760,26 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <div class="calc-panel">
       <span class="field-label">Package</span>
       <div class="tier-select-row" id="calcTierRow">
-        <button class="tier-select" data-tier="essential">Essential<b>₹1,950</b></button>
-        <button class="tier-select active" data-tier="signature">Signature<b>₹2,300</b></button>
+        <button class="tier-select" data-tier="essential">Essential<b>₹2,350</b></button>
+        <button class="tier-select active" data-tier="signature">Signature<b>₹2,550</b></button>
         <button class="tier-select" data-tier="elite">Elite<b>₹2,750</b></button>
       </div>
 		
       <span class="field-label">Add-on services</span>
-      <div class="addon-list" id="addonList"><!-- injected --></div>
+      <div class="addon-list" id="addonList"><!-- injected based on package selection --></div>
     </div>
 
     <div class="invoice">
       <h4>Estimated quotation</h4>
 	  <div class="dim-strip">
 			<div class="dim-item"><div class="dl">Built-up area</div><div class="dv" id="buTotal">1,850 <span style="font-size:14px;color:var(--muted)">sqft</span></div></div>
-			<div class="dim-item"><div class="dl">Base rate</div><div class="dv amber" id="baRate">₹2,300 <span style="font-size:14px;color:var(--muted-2)">/ sqft</span></div></div>
-			
-		  </div>
-      <div class="inv-row"><span>Package (<span id="invTierName">Signature</span>)</span><span class="v" id="invBase">₹42,55,000</span></div>
+			<div class="dim-item"><div class="dl">Base rate</div><div class="dv amber" id="baRate">₹2,550 <span style="font-size:14px;color:var(--muted-2)">/ sqft</span></div></div>
+	  </div>
+      <div class="inv-row"><span>Package (<span id="invTierName">Signature</span>)</span><span class="v" id="invBase">₹47,17,500</span></div>
       <div id="invAddonRows"><!-- injected --></div>
       <div class="inv-total">
         <span class="t">Estimated total</span>
-        <span class="v" id="invTotal">₹42,55,000</span>
+        <span class="v" id="invTotal">₹47,17,500</span>
       </div>
       <div class="inv-actions">
         <a href="tel:9986777818" class="btn primary block">Call to confirm this quote</a>
@@ -718,7 +800,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
 
   <div class="pay-total-line">
     <div class="l">Contract value used for this schedule</div>
-    <div class="r mono" id="payTotalDisplay">₹42,55,000</div>
+    <div class="r mono" id="payTotalDisplay">₹47,17,500</div>
   </div>
 
   <div class="progress-control">
@@ -744,6 +826,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
 
   <div class="timeline" id="timeline"><!-- injected --></div>
 </section>
+
 <!-- ============================= WHY US / INCLUDES ============================= -->
 <section class="section container" id="why">
   <div class="section-title-solo">
@@ -752,39 +835,109 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
     <p class="sub">Transparency on scope avoids disputes later — here's the exact split from our standard agreement.</p>
   </div>
 
-  <div class="split-two">
-    <div class="incl-card yes">
-      <h4><span class="sw"></span>Included in every package</h4>
-      <ul>
-        <li>Site engineer/supervisor present at all times</li>
-        <li>Weekly architect site visits</li>
-        <li>Structural engineer visit before roof slab casting</li>
-        <li>Architectural, structural and electrical drawings + 3D elevation</li>
-        <li>5,000L underground sump and 1,000L overhead tank</li>
-        <li>Safety and Security Grills for all windows</li>
-      </ul>
-    </div>
-    <div class="incl-card no">
-      <h4><span class="sw"></span>Arranged separately by client</h4>
-      <ul>
-        <li>Temporary power connection for the construction period</li>
-        <li>Water and power supply during construction (at no cost to us)</li>
-        <li>BESCOM pole connection, KEB meter &amp; liaison charges</li>
-        <li>Civic authority permissions and approval charges</li>
-        <li>Borewell, motor pumps and water-level controller</li>
-        <li>Sanitary line connection to BWSSB main chamber, shed cost</li>
-      </ul>
-    </div>
-  </div>
+ <div class="card-container">
 
-  <div class="feat-row">
-    <div class="feat"><div class="fnum">01</div><h5>Fixed-rate contract</h5><p>Rate per sqft is locked at agreement — only brand upgrades beyond spec are charged extra.</p></div>
-    <div class="feat"><div class="fnum">02</div><h5>Named brands, not "equivalent" grades</h5><p>Meenakshi steel, Astral plumbing, Jaguar Esco fittings — specified by name in your BOQ.</p></div>
-    <div class="feat"><div class="fnum">03</div><h5>Structural sign-off</h5><p>A structural engineer inspects before every slab is cast, not just at project start.</p></div>
-    <div class="feat"><div class="fnum">04</div><h5>Milestone billing</h5><p>You pay against physical progress on site. Never in advance of work done.</p></div>
-	<div class="feat"><div class="fnum">05</div><h5>Vaastu Complaiant</h5><p>All the Floor Plans designed and submitted are of 100% vaastu.</p></div>
+    <!-- CARD 1: INCLUDED IN EVERY PACKAGE -->
+    <div class="collapsible-card open">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="status-dot dot-green"></span>
+          <span class="card-title">Included in every package</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <ul class="info-list">
+          <li class="info-item"><span class="check-icon">✓</span> Site engineer/supervisor present at all times</li>
+          <li class="info-item"><span class="check-icon">✓</span> Weekly architect site visits</li>
+          <li class="info-item"><span class="check-icon">✓</span> Structural engineer visit before roof slab casting</li>
+          <li class="info-item"><span class="check-icon">✓</span> Architectural, structural and electrical drawings + 3D elevation</li>
+          <li class="info-item"><span class="check-icon">✓</span> 5,000L underground sump and 1,000L overhead tank</li>
+          <li class="info-item"><span class="check-icon">✓</span> Safety and Security Grills for all windows</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CARD 2: ARRANGED SEPARATELY BY CLIENT -->
+    <div class="collapsible-card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="status-dot dot-orange"></span>
+          <span class="card-title">Arranged separately by client</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <ul class="info-list">
+          <li class="info-item"><span class="minus-icon">–</span> Temporary power connection for the construction period</li>
+          <li class="info-item"><span class="minus-icon">–</span> Water and power supply during construction (at no cost to us)</li>
+          <li class="info-item"><span class="minus-icon">–</span> BESCOM pole connection, KEB meter & liaison charges</li>
+          <li class="info-item"><span class="minus-icon">–</span> Civic authority permissions and approval charges</li>
+          <li class="info-item"><span class="minus-icon">–</span> Borewell, motor pumps and water-level controller</li>
+          <li class="info-item"><span class="minus-icon">–</span> Sanitary line connection to BWSSB main chamber, shed cost</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CARD 3: FIXED-RATE CONTRACT -->
+    <div class="collapsible-card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="card-num">01</span>
+          <span class="card-title">Fixed-rate contract</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <p class="card-description">Rate per sqft is locked at agreement — only brand upgrades beyond spec are charged extra.</p>
+      </div>
+    </div>
+
+    <!-- CARD 4: NAMED BRANDS -->
+    <div class="collapsible-card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="card-num">02</span>
+          <span class="card-title">Named brands, not "equivalent" grades</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <p class="card-description">Meenakshi steel, Astral plumbing, Jaguar Esco fittings — specified by name in your BOQ.</p>
+      </div>
+    </div>
+
+    <!-- CARD 5: STRUCTURAL SIGN-OFF -->
+    <div class="collapsible-card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="card-num">03</span>
+          <span class="card-title">Structural sign-off</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <p class="card-description">A structural engineer inspects before every slab is cast, not just at project start.</p>
+      </div>
+    </div>
+
+    <!-- CARD 6: MILESTONE BILLING -->
+    <div class="collapsible-card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="header-title-group">
+          <span class="card-num">04</span>
+          <span class="card-title">Milestone billing</span>
+        </div>
+        <svg class="chevron-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <p class="card-description">You pay against physical progress on site. Never in advance of work done.</p>
+      </div>
+    </div>
+
   </div>
 </section>
+
 <!-- ============================= PROJECTS ============================= -->
 <section class="section container" id="projects">
   <div class="head-row">
@@ -806,8 +959,6 @@ footer{border-top:1px solid var(--line-soft);padding:44px 0 28px;margin-top:20px
 
   <div class="proj-grid" id="projGrid"><!-- injected --></div>
 </section>
-
-
 
 <!-- ============================= CONTACT ============================= -->
 <section class="section container" id="contact">
@@ -1099,18 +1250,26 @@ const PAYMENT_STAGES = [
   {pct:3,  label:"Finishing &amp; handover", desc:"Final coat, cleaning, keys handed over"}
 ];
 
-const ADDONS = [
-  {id:"automation", name:"Home automation wiring provision", note:"Conduit + points for future automation", type:"sqft", rate:25},
-  {id:"ceiling", name:"False ceiling — living &amp; bedrooms", note:"Gypsum board, cove profile", type:"sqft", rate:65},
-  {id:"marble", name:"Italian marble upgrade — living/dining", note:"In place of base vitrified tile", type:"sqft", rate:95},
-  {id:"cp", name:"Premium CP fittings upgrade", note:"Kohler / Jaguar Continental range", type:"sqft", rate:35},
-  {id:"kitchen", name:"Modular kitchen — soft-close + overhead", note:"Base + wall units, factory finish", type:"flat", rate:180000},
-  {id:"solar", name:"Solar water heater system", note:"2 bathrooms, 100L capacity", type:"flat", rate:45000},
-  {id:"facade", name:"Elevation lighting &amp; facade design", note:"Concealed LED profile + finish", type:"flat", rate:60000},
-  {id:"terrace", name:"Terrace deck &amp; landscape", note:"Paver deck + planter boxes", type:"sqft", rate:40},
-  {id:"tank", name:"Additional overhead tank (2,000L)", note:"For higher daily water demand", type:"flat", rate:15000},
-  {id:"ups", name:"Inverter &amp; battery backup provision", note:"Wiring + panel, battery not included", type:"flat", rate:20000}
-];
+/* Package Specific Add-ons */
+const PACKAGE_ADDONS = {
+  essential: [
+    {id:"ceiling", name:"False ceiling — living &amp; bedrooms", note:"Gypsum board, cove profile", type:"sqft", rate:65},
+    {id:"terrace", name:"Terrace deck &amp; landscape", note:"Paver deck + planter boxes", type:"sqft", rate:40},
+    {id:"ups", name:"Inverter &amp; battery backup provision", note:"Wiring + panel, battery not included", type:"flat", rate:20000},
+    {id:"solar", name:"Solar water heater system", note:"2 bathrooms, 100L capacity", type:"flat", rate:45000},
+    {id:"tank", name:"Additional overhead tank (2,000L)", note:"For higher daily water demand", type:"flat", rate:15000}
+  ],
+  signature: [
+    {id:"automation", name:"Home automation wiring provision", note:"Conduit + points for future automation", type:"sqft", rate:25},
+    {id:"ceiling", name:"False ceiling — living &amp; bedrooms", note:"Gypsum board, cove profile", type:"sqft", rate:65},
+    {id:"marble", name:"Italian marble upgrade — living/dining", note:"In place of base vitrified tile", type:"sqft", rate:95},
+    {id:"cp", name:"Premium CP fittings upgrade", note:"Kohler / Jaguar Continental range", type:"sqft", rate:35},
+    {id:"kitchen", name:"Modular kitchen — soft-close + overhead", note:"Base + wall units, factory finish", type:"flat", rate:180000},
+    {id:"solar", name:"Solar water heater system", note:"2 bathrooms, 100L capacity", type:"flat", rate:45000},
+    {id:"facade", name:"Elevation lighting &amp; facade design", note:"Concealed LED profile + finish", type:"flat", rate:60000}
+  ],
+  elite: [] // Elite has everything included
+};
 
 const PROJECTS = [
   {id:1,title:"Frazer Town Residence",loc:"Frazer Town, Bengaluru",area:"1,850 sqft",dur:"8 months",config:"G+1 · 3BHK",pkg:"Signature",cat:["g1","3bhk"],img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"},
@@ -1120,7 +1279,10 @@ const PROJECTS = [
   {id:5,title:"HRBR Layout Residence",loc:"HRBR Layout, Bengaluru",area:"1,950 sqft",dur:"8 months",config:"G+1 · 3BHK",pkg:"Elite",cat:["g1","3bhk"],img:"https://images.unsplash.com/photo-1523217582562-09d0def993a6?q=80&w=1200&auto=format&fit=crop"},
   {id:6,title:"Kammanahalli Row House",loc:"Kammanahalli, Bengaluru",area:"1,820 sqft",dur:"7 months",config:"G+1 · 3BHK",pkg:"Signature",cat:["g1","3bhk"],img:"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200&auto=format&fit=crop"}
 ];
-
+function toggleCard(header) {
+      const card = header.parentElement;
+      card.classList.toggle('open');
+    }
 /* ============================= HELPERS ============================= */
 function rupee(n){
   n = Math.round(n);
@@ -1148,7 +1310,7 @@ navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click", ()=>{
   document.body.classList.remove("menu-open");
 }));
 
-/* ============================= HOW IT WORKS (auto-scrolling horizontal carousel) ============================= */
+/* ============================= HOW IT WORKS ============================= */
 (function(){
   const track = document.getElementById("howTrack");
   const cards = Array.from(track.querySelectorAll(".how-card"));
@@ -1198,7 +1360,6 @@ navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click", ()=>{
   track.addEventListener("touchstart", pauseHowAutoplay, {passive:true});
   track.addEventListener("wheel", pauseHowAutoplay, {passive:true});
 
-  // keep dots/active state in sync if the person scrolls the track manually
   let scrollDebounce;
   track.addEventListener("scroll", ()=>{
     clearTimeout(scrollDebounce);
@@ -1213,373 +1374,389 @@ navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click", ()=>{
   }, {passive:true});
 
   const howObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        track.classList.add("in-view");
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        track.classList.add('in-view');
         startHowAutoplay();
-        howObserver.disconnect();
+      } else {
+        clearInterval(howAutoTimer);
+        howAutoTimer = null;
       }
     });
-  }, {threshold:.25});
-  howObserver.observe(document.getElementById("how"));
+  }, {threshold: 0.2});
 
-  setActiveCard(0);
+  howObserver.observe(track);
 })();
 
-/* ============================= MATERIAL SPEC ACCORDION (tier-aware) ============================= */
-const specOrder = ["drawings","structure","kitchen","bath","openings","tiling","paint","electrical","misc"];
-function renderSpecAccordion(tier){
-  const data = TIER_SPECS[tier];
-  const wrap = document.getElementById("specAccordion");
-  wrap.innerHTML = specOrder.map((key,i)=>{
-    const d = data[key];
-    const rows = d.rows.map(r=>`
-      <div class="acc-row"><div class="label">${r[0]}</div><div class="val">${r[1]}</div></div>
-    `).join("");
-    return `
-      <div class="acc-item ${i===0?'open':''}" data-key="${key}">
-        <button class="acc-header" type="button" aria-expanded="${i===0}">
-          <span class="ah-left">
-            <span class="ah-title">${d.title}</span>
-            <span class="ah-code">${d.code}</span>
-          </span>
-          <span class="ah-icon">+</span>
-        </button>
-        <div class="acc-body"><div class="acc-body-inner">${rows}</div></div>
+/* ============================= GLOBAL STATE ============================= */
+let currentTierKey = 'signature';
+let currentArea = 1850;
+let selectedAddons = new Set();
+
+/* ============================= PACKAGES & ACCORDION ============================= */
+const tierRange = document.getElementById('tierRange');
+const tierLabels = document.getElementById('tierLabels');
+const tbName = document.getElementById('tbName');
+const tbRate = document.getElementById('tbRate');
+const tbTotal = document.getElementById('tbTotal');
+const areaInput = document.getElementById('areaInput');
+const areaMinus = document.getElementById('areaMinus');
+const areaPlus = document.getElementById('areaPlus');
+const specAccordion = document.getElementById('specAccordion');
+
+const tierKeys = ['essential', 'signature', 'elite'];
+
+function updatePackageUI(key) {
+  currentTierKey = key;
+  const idx = tierKeys.indexOf(key);
+  tierRange.value = idx;
+
+  Array.from(tierLabels.children).forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+
+  const tier = TIERS[key];
+  tbName.textContent = tier.label;
+  tbRate.textContent = rupee(tier.rate) + ' / sqft';
+
+  renderAccordion(key);
+  calcCalc();
+}
+
+function renderAccordion(key) {
+  const spec = TIER_SPECS[key];
+  specAccordion.innerHTML = '';
+
+  Object.keys(spec).forEach((sheetKey, index) => {
+    const sheet = spec[sheetKey];
+    const item = document.createElement('div');
+    item.className = 'acc-item' + (index === 0 ? ' open' : '');
+
+    let rowsHtml = sheet.rows.map(r => `
+      <div class="acc-row">
+        <span class="label">${r[0]}</span>
+        <span class="val">${r[1]}</span>
+      </div>
+    `).join('');
+
+    item.innerHTML = `
+      <button class="acc-header" type="button">
+        <div class="ah-left">
+          <span class="ah-title">${sheet.title}</span>
+          <span class="ah-code">${sheet.code}</span>
+        </div>
+        <span class="ah-icon">+</span>
+      </button>
+      <div class="acc-body" style="${index === 0 ? 'max-height: 500px;' : ''}">
+        <div class="acc-body-inner">${rowsHtml}</div>
       </div>
     `;
-  }).join("");
 
-  wrap.querySelectorAll(".acc-item").forEach(item=>{
-    const header = item.querySelector(".acc-header");
-    const body = item.querySelector(".acc-body");
-    if(item.classList.contains("open")){
-      body.style.maxHeight = body.scrollHeight + "px";
-    }
-    header.addEventListener("click", ()=>{
-      const isOpen = item.classList.contains("open");
-      wrap.querySelectorAll(".acc-item.open").forEach(other=>{
-        if(other !== item){
-          other.classList.remove("open");
-          other.querySelector(".acc-header").setAttribute("aria-expanded","false");
-          other.querySelector(".acc-body").style.maxHeight = null;
-        }
-      });
-      if(isOpen){
-        item.classList.remove("open");
-        header.setAttribute("aria-expanded","false");
-        body.style.maxHeight = null;
-      } else {
-        item.classList.add("open");
-        header.setAttribute("aria-expanded","true");
-        body.style.maxHeight = body.scrollHeight + "px";
+    const btn = item.querySelector('.acc-header');
+    const body = item.querySelector('.acc-body');
+
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.toggle('open');
+      body.style.maxHeight = isOpen ? body.scrollHeight + 'px' : '0px';
+    });
+
+    specAccordion.appendChild(item);
+  });
+}
+
+tierRange.addEventListener('input', (e) => {
+  updatePackageUI(tierKeys[e.target.value]);
+});
+
+Array.from(tierLabels.children).forEach((btn) => {
+  btn.addEventListener('click', () => {
+    updatePackageUI(btn.dataset.tier);
+  });
+});
+
+areaInput.addEventListener('input', (e) => {
+  currentArea = Math.max(100, parseInt(e.target.value) || 0);
+  calcCalc();
+});
+
+areaMinus.addEventListener('click', () => {
+  currentArea = Math.max(100, currentArea - 50);
+  areaInput.value = currentArea;
+  calcCalc();
+});
+
+areaPlus.addEventListener('click', () => {
+  currentArea += 50;
+  areaInput.value = currentArea;
+  calcCalc();
+});
+
+document.getElementById('usePkgBtn').addEventListener('click', () => {
+  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+});
+
+/* ============================= CALCULATOR ============================= */
+const calcTierRow = document.getElementById('calcTierRow');
+const addonList = document.getElementById('addonList');
+const buTotal = document.getElementById('buTotal');
+const baRate = document.getElementById('baRate');
+const invTierName = document.getElementById('invTierName');
+const invBase = document.getElementById('invBase');
+const invAddonRows = document.getElementById('invAddonRows');
+const invTotal = document.getElementById('invTotal');
+
+calcTierRow.querySelectorAll('.tier-select').forEach(btn => {
+  btn.addEventListener('click', () => {
+    calcTierRow.querySelectorAll('.tier-select').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updatePackageUI(btn.dataset.tier);
+  });
+});
+
+function renderAddons(tierKey) {
+  addonList.innerHTML = '';
+  selectedAddons.clear();
+
+  if (tierKey === 'elite') {
+    addonList.innerHTML = `<div class="elite-inclusive-msg">This Package comes with Everything included</div>`;
+    return;
+  }
+
+  const addons = PACKAGE_ADDONS[tierKey] || [];
+  addons.forEach(addon => {
+    const div = document.createElement('label');
+    div.className = 'addon';
+    
+    const priceStr = addon.type === 'sqft' ? `${rupee(addon.rate)} / sqft` : rupee(addon.rate);
+    
+    div.innerHTML = `
+      <input type="checkbox" value="${addon.id}">
+      <div class="an">
+        ${addon.name}
+        <small>${addon.note}</small>
+      </div>
+      <div class="ap">${priceStr}</div>
+    `;
+
+    const chk = div.querySelector('input');
+    chk.addEventListener('change', () => {
+      if (chk.checked) selectedAddons.add(addon.id);
+      else selectedAddons.delete(addon.id);
+      calcCalc();
+    });
+
+    addonList.appendChild(div);
+  });
+}
+
+function calcCalc() {
+  // Sync Buttons
+  calcTierRow.querySelectorAll('.tier-select').forEach(b => {
+    b.classList.toggle('active', b.dataset.tier === currentTierKey);
+  });
+
+  const tier = TIERS[currentTierKey];
+  const baseCost = currentArea * tier.rate;
+
+  tbTotal.textContent = `≈ ${rupee(baseCost)} for ${currentArea.toLocaleString('en-IN')} sqft`;
+  buTotal.innerHTML = `${currentArea.toLocaleString('en-IN')} <span style="font-size:14px;color:var(--muted)">sqft</span>`;
+  baRate.innerHTML = `${rupee(tier.rate)} <span style="font-size:14px;color:var(--muted-2)">/ sqft</span>`;
+  invTierName.textContent = tier.label;
+  invBase.textContent = rupee(baseCost);
+
+  // If tier key changed, re-render add-ons list
+  if (addonList.dataset.currentTier !== currentTierKey) {
+    addonList.dataset.currentTier = currentTierKey;
+    renderAddons(currentTierKey);
+  }
+
+  let addonCostTotal = 0;
+  invAddonRows.innerHTML = '';
+
+  if (currentTierKey !== 'elite') {
+    const addons = PACKAGE_ADDONS[currentTierKey] || [];
+    addons.forEach(addon => {
+      if (selectedAddons.has(addon.id)) {
+        const cost = addon.type === 'sqft' ? addon.rate * currentArea : addon.rate;
+        addonCostTotal += cost;
+
+        const row = document.createElement('div');
+        row.className = 'inv-row addon-line';
+        row.innerHTML = `<span>+ ${addon.name}</span><span class="v">${rupee(cost)}</span>`;
+        invAddonRows.appendChild(row);
       }
     });
-  });
-}
-window.addEventListener("resize", ()=>{
-  document.querySelectorAll(".acc-item.open .acc-body").forEach(b=>{
-    b.style.maxHeight = b.scrollHeight + "px";
-  });
-});
-
-/* ============================= TIER SELECTION (slider + labels + calculator, all in sync) ============================= */
-const TIER_ORDER = ["essential","signature","elite"];
-const tierRange = document.getElementById("tierRange");
-const tierLabels = document.getElementById("tierLabels");
-
-let currentTier = "signature";
-
-function updateRangeFill(){
-  const idx = TIER_ORDER.indexOf(currentTier);
-  const pct = (idx / (TIER_ORDER.length - 1)) * 100;
-  tierRange.style.background = `linear-gradient(to right, var(--amber) 0%, var(--amber) ${pct}%, var(--line) ${pct}%, var(--line) 100%)`;
-}
-
-function renderTierBanner(){
-  const tier = TIERS[currentTier];
-  const area = Math.max(0, +(document.getElementById("areaInput")?.value) || 1850);
-  document.getElementById("tbName").textContent = tier.label;
-  document.getElementById("tbRate").textContent = `₹${tier.rate.toLocaleString("en-IN")} / sqft`;
-  document.getElementById("tbTotal").textContent = `≈ ${rupee(tier.rate * area)} for ${area.toLocaleString("en-IN")} sqft`;
-  document.getElementById("tbFlag").textContent = currentTier === "signature" ? "Current BOQ" : "Indicative variant";
-  document.getElementById("buTotal").textContent = `${area.toLocaleString("en-IN")} sqft`;
-  document.getElementById("baRate").textContent = `₹${tier.rate.toLocaleString("en-IN")} / sqft`;
-}
-
-function setActiveTier(tier){
-  currentTier = tier;
-
-  // slider + labels
-  tierRange.value = TIER_ORDER.indexOf(tier);
-  updateRangeFill();
-  tierLabels.querySelectorAll("button").forEach(b=>{
-    b.classList.toggle("active", b.dataset.tier === tier);
-  });
-
-  // banner + accordion
-  renderTierBanner();
-  renderSpecAccordion(tier);
-
-  // calculator tier buttons
-  document.querySelectorAll("#calcTierRow .tier-select").forEach(b=>{
-    b.classList.toggle("active", b.dataset.tier === tier);
-  });
-
-  compute();
-}
-
-tierRange.addEventListener("input", ()=> setActiveTier(TIER_ORDER[+tierRange.value]));
-tierLabels.querySelectorAll("button").forEach(b=>{
-  b.addEventListener("click", ()=> setActiveTier(b.dataset.tier));
-});
-document.querySelectorAll("#calcTierRow .tier-select").forEach(b=>{
-  b.addEventListener("click", ()=>setActiveTier(b.dataset.tier));
-});
-document.getElementById("usePkgBtn").addEventListener("click", ()=>{
-  document.getElementById("calculator").scrollIntoView({behavior:"smooth"});
-  showToast(TIERS[currentTier].label + " package loaded into calculator");
-});
-
-/* ============================= AREA INPUT ============================= */
-const areaInput = document.getElementById("areaInput");
-document.getElementById("areaMinus").addEventListener("click", ()=>{
-  areaInput.value = Math.max(200, (+areaInput.value||0) - 50);
-  renderTierBanner();
-  compute();
-});
-document.getElementById("areaPlus").addEventListener("click", ()=>{
-  areaInput.value = (+areaInput.value||0) + 50;
-  renderTierBanner();
-  compute();
-});
-areaInput.addEventListener("input", ()=>{ renderTierBanner(); compute(); });
-
-/* ============================= ADD-ONS ============================= */
-const addonListEl = document.getElementById("addonList");
-addonListEl.innerHTML = ADDONS.map(a=>`
-  <label class="addon">
-    <input type="checkbox" data-id="${a.id}">
-    <span class="an">${a.name}<small>${a.note}</small></span>
-    <span class="ap mono">${a.type==="flat" ? rupee(a.rate) : "₹"+a.rate+"/sqft"}</span>
-  </label>
-`).join("");
-addonListEl.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-  cb.addEventListener("change", compute);
-});
-
-/* ============================= PAYMENT TIMELINE (automated progress simulator) ============================= */
-let currentProgressIdx = 0;   // number of stages completed so far
-let currentGrandTotal = 4255000;
-let autoplayTimer = null;
-const progressRange = document.getElementById("progressRange");
-
-/* Build the timeline markup once. Later updates only toggle classes/text in place
-   so nothing gets re-created or re-animated when the step changes. */
-function buildTimelineDOM(){
-  const tl = document.getElementById("timeline");
-  tl.innerHTML = PAYMENT_STAGES.map((s,i)=>`
-    <div class="tl-node" data-idx="${i}">
-      <div class="tl-dot">${s.pct}%</div>
-      <div class="tl-label">${s.label}</div>
-      <div class="tl-desc">${s.desc}</div>
-      <div class="tl-amt mono" data-pct="${s.pct}">₹0</div>
-    </div>
-  `).join("");
-
-  tl.addEventListener("click", (e)=>{
-    const node = e.target.closest(".tl-node");
-    if(!node) return;
-    stopAutoplay();
-    currentProgressIdx = +node.dataset.idx;
-    progressRange.value = currentProgressIdx;
-    applyTimelineState();
-  });
-}
-
-/* Just updates state (done/current/future + amounts) — no DOM rebuild, no re-animation. */
-function applyTimelineState(){
-  const tl = document.getElementById("timeline");
-  tl.querySelectorAll(".tl-node").forEach(node=>{
-    const i = +node.dataset.idx;
-    const state = i < currentProgressIdx ? "done" : (i === currentProgressIdx ? "current" : "future");
-    node.classList.remove("done","current","future");
-    node.classList.add(state);
-    const amtEl = node.querySelector(".tl-amt");
-    const pct = +amtEl.dataset.pct;
-    amtEl.textContent = rupee(currentGrandTotal * pct/100);
-  });
-  updateProgressStats();
-}
-
-function renderTimeline(total){
-  currentGrandTotal = total;
-  const tl = document.getElementById("timeline");
-  if(!tl.dataset.built){
-    buildTimelineDOM();
-    tl.dataset.built = "1";
   }
-  applyTimelineState();
+
+  const grandTotal = baseCost + addonCostTotal;
+  invTotal.textContent = rupee(grandTotal);
+
+  updatePaymentSchedule(grandTotal);
 }
 
-function updateProgressStats(){
+/* ============================= PAYMENT SCHEDULE ============================= */
+const payTotalDisplay = document.getElementById('payTotalDisplay');
+const progressRange = document.getElementById('progressRange');
+const progStageLabel = document.getElementById('progStageLabel');
+const paySoFar = document.getElementById('paySoFar');
+const paySoFarPct = document.getElementById('paySoFarPct');
+const payRemaining = document.getElementById('payRemaining');
+const payRemainingPct = document.getElementById('payRemainingPct');
+const timeline = document.getElementById('timeline');
+
+function updatePaymentSchedule(totalVal) {
+  payTotalDisplay.textContent = rupee(totalVal);
+  renderTimeline(totalVal, parseInt(progressRange.value));
+}
+
+function renderTimeline(totalVal, stageIdx) {
+  timeline.innerHTML = '';
+  let cumPct = 0;
+
+  PAYMENT_STAGES.forEach((st, idx) => {
+    cumPct += st.pct;
+    const isDone = idx < stageIdx;
+    const isCurrent = idx === stageIdx;
+    const isFuture = idx > stageIdx;
+
+    const stageAmt = (st.pct / 100) * totalVal;
+
+    const node = document.createElement('div');
+    node.className = `tl-node ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''} ${isFuture ? 'future' : ''}`;
+    
+    node.innerHTML = `
+      <div class="tl-dot">${isDone ? '✓' : idx + 1}</div>
+      <div class="tl-label">${st.label} (${st.pct}%)</div>
+      <div class="tl-desc">${st.desc}</div>
+      <div class="tl-amt">${rupee(stageAmt)}</div>
+    `;
+
+    node.addEventListener('click', () => {
+      progressRange.value = idx;
+      handleProgressChange();
+    });
+
+    timeline.appendChild(node);
+  });
+
+  // Calculate released / remaining
   let releasedPct = 0;
-  for(let i=0;i<currentProgressIdx;i++){ releasedPct += PAYMENT_STAGES[i].pct; }
-  const remainingPct = 100 - releasedPct;
-  const released = currentGrandTotal * releasedPct/100;
-  const remaining = currentGrandTotal * remainingPct/100;
+  for (let i = 0; i < stageIdx; i++) releasedPct += PAYMENT_STAGES[i].pct;
 
-  document.getElementById("paySoFar").textContent = rupee(released);
-  document.getElementById("paySoFarPct").textContent = releasedPct + "%";
-  document.getElementById("payRemaining").textContent = rupee(remaining);
-  document.getElementById("payRemainingPct").textContent = remainingPct + "%";
+  const releasedAmt = (releasedPct / 100) * totalVal;
+  const remainingAmt = totalVal - releasedAmt;
 
-  const label = currentProgressIdx >= PAYMENT_STAGES.length
-    ? "All stages complete — handed over"
-    : `Stage ${currentProgressIdx + 1} of ${PAYMENT_STAGES.length} — ${PAYMENT_STAGES[currentProgressIdx].label.replace(/&amp;/g,"&")}`;
-  document.getElementById("progStageLabel").textContent = label;
+  paySoFar.textContent = rupee(releasedAmt);
+  paySoFarPct.textContent = releasedPct + '%';
+  payRemaining.textContent = rupee(remainingAmt);
+  payRemainingPct.textContent = (100 - releasedPct) + '%';
+
+  if (stageIdx === 0) {
+    progStageLabel.textContent = `Stage 1 of 8 — ${PAYMENT_STAGES[0].label}`;
+  } else if (stageIdx >= PAYMENT_STAGES.length) {
+    progStageLabel.textContent = `Completed — Handover Done`;
+  } else {
+    progStageLabel.textContent = `Stage ${stageIdx + 1} of 8 — ${PAYMENT_STAGES[stageIdx].label}`;
+  }
 }
 
-/* Auto-advance through every stage on its own, one at a time, stopping at the final stage */
-function startAutoplay(){
-  if(autoplayTimer) return;
-  autoplayTimer = setInterval(()=>{
-    if(currentProgressIdx < PAYMENT_STAGES.length){
-      currentProgressIdx++;
-      progressRange.value = currentProgressIdx;
-      applyTimelineState();
-    }
-    if(currentProgressIdx >= PAYMENT_STAGES.length){
-      stopAutoplay();
-    }
-  }, 5000);
-}
-function stopAutoplay(){
-  if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+function handleProgressChange() {
+  const currentTotal = (currentArea * TIERS[currentTierKey].rate) + Array.from(selectedAddons).reduce((acc, id) => {
+    const addons = PACKAGE_ADDONS[currentTierKey] || [];
+    const item = addons.find(a => a.id === id);
+    if (!item) return acc;
+    return acc + (item.type === 'sqft' ? item.rate * currentArea : item.rate);
+  }, 0);
+
+  renderTimeline(currentTotal, parseInt(progressRange.value));
 }
 
-progressRange.addEventListener("input", ()=>{
-  stopAutoplay();
-  currentProgressIdx = +progressRange.value;
-  applyTimelineState();
-});
+progressRange.addEventListener('input', handleProgressChange);
 
-/* Reveal the timeline (once, on first appearance only) and kick off the automated walk-through */
-const paymentObserver = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      document.getElementById("timeline").classList.add("in-view");
-      startAutoplay();
-      paymentObserver.disconnect();
-    }
+const timelineObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) timeline.classList.add('in-view');
   });
-}, {threshold:.2});
-paymentObserver.observe(document.getElementById("payment"));
-
-/* ============================= COMPUTE ============================= */
-function compute(){
-  const tier = TIERS[currentTier];
-  const area = Math.max(0, +areaInput.value || 0);
-  const base = tier.rate * area;
-
-  let addonTotal = 0;
-  let rowsHtml = "";
-  ADDONS.forEach(a=>{
-    const cb = addonListEl.querySelector(`input[data-id="${a.id}"]`);
-    if(cb && cb.checked){
-      const cost = a.type === "flat" ? a.rate : a.rate * area;
-      addonTotal += cost;
-      rowsHtml += `<div class="inv-row addon-line"><span>${a.name}</span><span class="v">${rupee(cost)}</span></div>`;
-    }
-  });
-
-  const total = base + addonTotal;
-
-  document.getElementById("invTierName").textContent = tier.label;
-  document.getElementById("invBase").textContent = rupee(base);
-  document.getElementById("invAddonRows").innerHTML = rowsHtml;
-  document.getElementById("invTotal").textContent = rupee(total);
-
-  const payTotalEl = document.getElementById("payTotalDisplay");
-  payTotalEl.textContent = rupee(total);
-  payTotalEl.classList.add("flash");
-  setTimeout(()=> payTotalEl.classList.remove("flash"), 300);
-
-  renderTimeline(total);
-}
-
-/* WhatsApp share (opens wa.me with prefilled text — no backend) */
-document.getElementById("whatsBtn").addEventListener("click", ()=>{
-  const tier = TIERS[currentTier];
-  const area = areaInput.value;
-  const total = document.getElementById("invTotal").textContent;
-  const text = encodeURIComponent(`Hi, I'd like a quote for a ${tier.label} package, ${area} sqft, estimated total ${total}.`);
-  window.open(`https://wa.me/919986777818?text=${text}`, "_blank");
-});
+}, { threshold: 0.15 });
+timelineObserver.observe(timeline);
 
 /* ============================= PROJECTS ============================= */
-function renderProjects(filter){
-  const grid = document.getElementById("projGrid");
-  const list = filter === "all" ? PROJECTS : PROJECTS.filter(p=>p.cat.includes(filter));
-  grid.innerHTML = list.map(p=>`
-    <div class="proj-card" data-id="${p.id}">
-      <div class="proj-img"><img src="${p.img}" loading="lazy" alt="${p.title}"><span class="proj-tag">${p.dur}</span></div>
+const projGrid = document.getElementById('projGrid');
+const projFilters = document.getElementById('projFilters');
+
+function renderProjects(filter = 'all') {
+  projGrid.innerHTML = '';
+  const filtered = filter === 'all' ? PROJECTS : PROJECTS.filter(p => p.cat.includes(filter));
+
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'proj-card';
+    card.innerHTML = `
+      <div class="proj-img">
+        <img src="${p.img}" alt="${p.title}" loading="lazy">
+        <span class="proj-tag">${p.pkg}</span>
+      </div>
       <div class="proj-body">
         <h4>${p.title}</h4>
         <div class="loc">${p.loc}</div>
-        <div class="proj-meta"><span>${p.area}</span><span>${p.config}</span></div>
+        <div class="proj-meta">
+          <span>${p.config}</span>
+          <span>${p.area}</span>
+        </div>
       </div>
-    </div>
-  `).join("");
-  grid.querySelectorAll(".proj-card").forEach(card=>{
-    card.addEventListener("click", ()=>openProjectModal(+card.dataset.id));
+    `;
+
+    card.addEventListener('click', () => openProjModal(p));
+    projGrid.appendChild(card);
   });
 }
-document.getElementById("projFilters").addEventListener("click",(e)=>{
-  const btn = e.target.closest(".filter-btn");
-  if(!btn) return;
-  document.querySelectorAll("#projFilters .filter-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  renderProjects(btn.dataset.f);
-});
-renderProjects("all");
 
-function openProjectModal(id){
-  const p = PROJECTS.find(x=>x.id===id);
-  if(!p) return;
-  document.getElementById("pmImg").src = p.img;
-  document.getElementById("pmTitle").textContent = p.title;
-  document.getElementById("pmLoc").textContent = p.loc;
-  document.getElementById("pmArea").textContent = p.area;
-  document.getElementById("pmDur").textContent = p.dur;
-  document.getElementById("pmConfig").textContent = p.config;
-  document.getElementById("pmPkg").textContent = p.pkg;
-  document.getElementById("projModalBg").classList.add("open");
+projFilters.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    projFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderProjects(btn.dataset.f);
+  });
+});
+
+/* ============================= MODAL ============================= */
+const projModalBg = document.getElementById('projModalBg');
+const projModalClose = document.getElementById('projModalClose');
+
+function openProjModal(p) {
+  document.getElementById('pmImg').src = p.img;
+  document.getElementById('pmTitle').textContent = p.title;
+  document.getElementById('pmLoc').textContent = p.loc;
+  document.getElementById('pmArea').textContent = p.area;
+  document.getElementById('pmDur').textContent = p.dur;
+  document.getElementById('pmConfig').textContent = p.config;
+  document.getElementById('pmPkg').textContent = p.pkg;
+
+  projModalBg.classList.add('open');
 }
-document.getElementById("projModalClose").addEventListener("click", ()=>{
-  document.getElementById("projModalBg").classList.remove("open");
-});
-document.getElementById("projModalBg").addEventListener("click",(e)=>{
-  if(e.target.id === "projModalBg") document.getElementById("projModalBg").classList.remove("open");
+
+projModalClose.addEventListener('click', () => projModalBg.classList.remove('open'));
+projModalBg.addEventListener('click', (e) => {
+  if (e.target === projModalBg) projModalBg.classList.remove('open');
 });
 
-/* ============================= CONTACT FORM ============================= */
-document.getElementById("contactForm").addEventListener("submit", (e)=>{
+/* ============================= WHATSAPP & CONTACT FORM ============================= */
+document.getElementById('whatsBtn').addEventListener('click', () => {
+  const total = invTotal.textContent;
+  const msg = `Hi Interioarc Team, I created a quote on your website:\n- Package: ${TIERS[currentTierKey].label}\n- Area: ${currentArea} sqft\n- Estimated Total: ${total}\nPlease contact me to discuss.`;
+  window.open(`https://wa.me/919986777818?text=${encodeURIComponent(msg)}`, '_blank');
+});
+
+document.getElementById('contactForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const name = document.getElementById("cfName").value.trim();
-  const phone = document.getElementById("cfPhone").value.trim();
-  if(!name || phone.length < 10){
-    showToast("Please enter your name and a valid phone number");
-    return;
-  }
-  document.getElementById("formStatus").classList.add("show");
-  showToast("Request received — we'll call you back soon");
+  document.getElementById('formStatus').classList.add('show');
+  showToast('Site visit request sent successfully!');
   e.target.reset();
 });
 
-/* ============================= INIT ============================= */
-setActiveTier("signature");
-compute();
+/* Initialize */
+updatePackageUI('signature');
+renderProjects('all');
 </script>
 </body>
 </html>
